@@ -11,10 +11,10 @@ class Firefox():
         self.setAppVersion()
         self.setOscpu()
         self.setPlatform()
-        self.setAccept()
         self.setLanguages()
         self.setAcceptEncoding()
         self.setAcceptHttp()
+
         self.setGreaseMonkey()
 
         self.setPreferences()
@@ -35,9 +35,6 @@ class Firefox():
     def setPlatform(self):
         self.platform = 'user_pref("general.platform.override","fake platform py");\n'
 
-    def setAccept(self):
-        self.accept= 'user_pref("fake accept py");\n'
-
     def setLanguages(self):
         self.languages = 'user_pref("intl.accept_languages", "en,fr;q=0.5");\n'
 
@@ -48,7 +45,10 @@ class Firefox():
         self.acceptEncoding = 'user_pref("network.http.accept-encoding", "gzip, deflate")\n;'
 
     def setGreaseMonkey(self):
+        #only for development phase
         self.greaseMonkey = 'user_pref("extensions.greasemonkey.fileIsGreaseable","true");\n'
+
+
     def setPreferences(self):
         #set kwdl11 ... part with a variable
         with open("/home/avastel/.mozilla/firefox/kwdl11go.default/user.js", "w") as prefs:
@@ -57,7 +57,6 @@ class Firefox():
             prefs.write(self.appVersion)
             prefs.write(self.oscpu)
             prefs.write(self.platform)
-            prefs.write(self.accept)
 
             prefs.close()
 

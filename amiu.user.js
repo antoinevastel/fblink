@@ -11,11 +11,15 @@
   TODO : change http headers sent by browser
 */
 
-
+console.log("product "+navigator.product);
+console.log("platform "+navigator.platform);
 //In the future this seed will be generated using python so that it will be constant during a whole session of browsing
 var seed = 4;
-//It will also be defined using python
+//All the following variables will be defined using python
 var userAgent = "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/43.0.2357.81 Safari/537.36";
+var language = "en";
+var languages = "en,fr;q=0.5";
+var platform = "Linux x86_64";
 
 //We define a new screen resolution
 var currentWidth = screen.width;
@@ -111,6 +115,46 @@ if(browser ==="chrome"){
 }
 
 var appCodeName = "Mozilla";
+if(seed % 3 == 0){
+  var yearBuildId = "2015";
+}else{
+  var yearBuildId = "2014";
+}
+
+var i = 12;
+var found = false;
+while(i >= 0 && !found){
+  if(seed % i == 0){
+    var monthBuild = i.toString();
+    found = true;
+  }
+  i--;
+}
+
+
+var i = 29;
+var found = false;
+while(i >= 0 && !found){
+  if(seed % i == 0){
+    var dayBuild = i.toString();
+    found = true;
+  }
+  i--;
+}
+
+var i = 24;
+var found = false;
+while(i >= 0 && !found){
+  if(seed % i == 0){
+    var hourBuild = i.toString();
+    found = true;
+  }
+  i--;
+}
+
+
+///Language and languages :
+
 
 //End of navigator definition
 
@@ -147,7 +191,6 @@ var myController = {
 
   }
 };
-
 
 
 /* Screen object */
@@ -193,15 +236,15 @@ Object.defineProperty(navigator, 'appCodeName', {
 
 //Language and languages should be set using the value generated in python
 Object.defineProperty(navigator, 'language', {
-  get: function(){myController.navigatorAccessed();return 'fake language ';}
+  get: function(){myController.navigatorAccessed();return language;}
 });
 
 Object.defineProperty(navigator, 'languages', {
-  get: function(){myController.navigatorAccessed();return 'list of fake languages ';}
+  get: function(){myController.navigatorAccessed();return languages;}
 });
 
 Object.defineProperty(navigator, 'platform', {
-  get: function(){myController.navigatorAccessed();return 'fake platform  ';}
+  get: function(){myController.navigatorAccessed();return platform;}
 });
 
 Object.defineProperty(navigator, 'product', {
@@ -218,6 +261,10 @@ Object.defineProperty(navigator, 'vendor', {
 
 Object.defineProperty(navigator, 'vendorSub', {
   get: function(){myController.navigatorAccessed();return 'fake vendorSub';}
+});
+
+Object.defineProperty(navigator, 'buildID', {
+  get: function(){myController.navigatorAccessed();return 'fake buildID';}
 });
 
 
