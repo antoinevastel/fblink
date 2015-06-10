@@ -7,9 +7,15 @@
 // @grant       none
 // @run-at document-start
 // ==/UserScript==
+/*
+  TODO : change http headers sent by browser
+*/
+
 
 //In the future this seed will be generated using python so that it will be constant during a whole session of browsing
 var seed = 4;
+//It will also be defined using python
+var userAgent = "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/43.0.2357.81 Safari/537.36";
 
 //We define a new screen resolution
 var currentWidth = screen.width;
@@ -83,6 +89,31 @@ var listPluginsFirefox = [new PluginFirefox('DivX® Web Player', 'DivX Web Playe
 
 //end of plugins definition
 
+//Navigator definition
+var appName = 'Netscape';
+
+/* Example of user agent and app version on chrome 
+  user agent : "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/43.0.2357.81 Safari/537.36"
+  /5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/43.0.2357.81 Safari/537.36
+  appVersion : "5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/43.0.2357.81 Safari/537.36"
+
+  Example of user agent and app version on firefox
+  user agent : "Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:38.0) Gecko/20100101 Firefox/38.0"
+  appVersion : "5.0 (X11)"
+*/
+
+var reAppVersionChrome = /[0-9.]+[\w\W]+\/[\w\W]+/;
+var reAppVersionFirefox = /[0-9.]+ \([A-Z0-9]*/;
+if(browser ==="chrome"){
+  var appVersion = userAgent.match(reAppVersionChrome)[0];
+}else{
+  var appVersion = userAgent.match(reAppVersionFirefox)[0]+")";
+}
+
+var appCodeName = "Mozilla";
+
+//End of navigator definition
+
 
 var myController = {
   nbAccess : 0,
@@ -149,18 +180,18 @@ Object.defineProperty(screen, 'pixelDepth', {
 
 //App info
 Object.defineProperty(navigator, 'appName', {
-  get: function(){myController.navigatorAccessed();return 'fake appName';}
+  get: function(){myController.navigatorAccessed();return appName;}
 });
 
 Object.defineProperty(navigator, 'appVersion', {
-  get: function(){myController.navigatorAccessed();return 'fake appVersion';}
+  get: function(){myController.navigatorAccessed();return appVersion;}
 });
 
 Object.defineProperty(navigator, 'appCodeName', {
-  get: function(){myController.navigatorAccessed();return 'fake appCodeName';}
+  get: function(){myController.navigatorAccessed();return appCodeName;}
 });
 
-
+//Language and languages should be set using the value generated in python
 Object.defineProperty(navigator, 'language', {
   get: function(){myController.navigatorAccessed();return 'fake language ';}
 });
@@ -308,7 +339,5 @@ navigator.getStorageUpdates = function(){
 }
 */
 //randomizer auto complete des formulaires
-
-
-
+  
  
