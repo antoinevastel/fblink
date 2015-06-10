@@ -1,1 +1,0 @@
-/home/avastel/.mozilla/firefox/kwdl11go.default/gm_scripts/amiu/amiu.user.js
