@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Title of the document</title>
+</head>
+
+<body>
+<br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br>
+<br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br>aaaaaaaaaaaaaaaaaa<br><br><br><br><br><br><br><br><br><br><br><br><br><br><br>
+
+<br><br><br><br><br><br><br><br><br><br><br><br>aaaaaaaaaaaaa<br><br><br><br><br><br><br><br><br><br><br><br>
+</body>
+
+
+<script>
+
+	console.log("User agent "+navigator.userAgent);
+	console.log("App name "+navigator.appName);
+
+	//Has to be the same as in the user userAgent
+	console.log("App version "+navigator.appVersion);
+	//Undefined with chrome
+	console.log("oscpu "+navigator.oscpu);
+	//Undefined whith chrome and firefox
+	console.log("security policy "+navigator.securityPolicy);
+	//seems to be undefined on firefox
+	console.log("vendor "+navigator.vendor);
+
+	console.log("platform "+navigator.platform);
+	console.log("app code name "+navigator.appCodeName);
+	console.log("vendorSub : "+navigator.vendorSub);
+
+	//dimensions of the screen
+	console.log("width :"+ screen.width);
+	console.log("height :"+ screen.height);
+	console.log("depth :"+ screen.colorDepth);
+	console.log("avail width : "+screen.availWidth);
+	console.log("avail height : "+screen.availHeight);
+	console.log("pixel depth : "+screen.pixelDepth);
+
+
+	console.log(new Date().getTimezoneOffset());
+	console.log("cookie :"+ navigator.cookieEnabled);
+
+	//Gecko with chrome and firefox  => should match user agent
+	console.log("product : "+navigator.product );
+	console.log("language : "+navigator.language );
+	console.log("language : "+navigator.languages );
+	console.log("productsub : "+navigator.productSub);
+
+	for (i = 0; i < navigator.plugins.length; i++) {
+ 		plugin = navigator.plugins[i];
+ 		console.log(plugin.name+"-----"+plugin.description+"----"+plugin.filename+"--"+plugin.version);
+ 	}
+ 	console.log("java enabled : "+navigator.javaEnabled());
+	//navigator.javaEnabled + plugins doivent coincider !!!!
+
+	//tres discriminant si la personne a toujours un zoom !
+	console.log("window device pixel ratio : "+window.devicePixelRatio);
+
+	//We get the prototype of navigator object
+	console.log("\n\nProperties + methods  of navigator");
+	navObjectProp = [];
+	for (var property in Object.getPrototypeOf(navigator)) {
+		navObjectProp.push(property);
+		//console.log(property);
+	}
+
+	navObjectProp.sort();
+	navObjectSorted = "";
+	for(i=0; i<navObjectProp.length; i++){
+		navObjectSorted += navObjectProp[i]+", ";
+	} 
+	
+	//console.log(navObjectSorted);
+	/* 
+		result for firefox : 
+
+		"appCodeName, appName, appVersion, battery, buildID, cookieEnabled, doNotTrack, geolocation, getGamepads, javaEnabled, language, languages, mediaDevices, mimeTypes, mozGetUserMedia, onLine, oscpu, platform, plugins, product, productSub, registerContentHandler, registerProtocolHandler, requestMediaKeySystemAccess, sendBeacon, taintEnabled, userAgent, vendor, vendorSub, vibrate"
+
+		result for chrome : 
+		
+		"appCodeName, appName, appVersion, cookieEnabled, doNotTrack, geolocation, getBattery, getGamepads, getStorageUpdates, hardwareConcurrency, javaEnabled, language, languages, maxTouchPoints, mimeTypes, onLine, permissions, platform, plugins, product, productSub, registerProtocolHandler, requestMIDIAccess, requestMediaKeySystemAccess, sendBeacon, serviceWorker, unregisterProtocolHandler, userAgent, vendor, vendorSub, vibrate, webkitGetUserMedia, webkitPersistentStorage, webkitTemporaryStorage"
+
+		differences : 
+		only in firefox : battery, buildID, mediaDevices, mozGetUserMedia, oscpu, taintEnabled, registerContentHandler
+		only in chrome : getBattery, getStorageUpdates, hardwareConcurrency, maxTouchPoints, permissions,requestMIDIAccess, serviceWorker, unregisterProtocolHandler, webkitGetUserMedia, webkitPersistentStorage, webkitTemporaryStorage
+
+	*/
+	function testScreenResolution(e){
+		if(e.clientX > screen.width || e.clientY > screen.height){
+			console.log("You lied on your device");
+			console.log("Your cursor is currently in x="+e.clientX+", y="+e.clientY);
+			console.log("The problem is that your screen measures x="+screen.width+", y="+screen.height);
+			document.getElementsByTagName("body")[0].removeEventListener("mouseleave",testScreenResolution);
+		}
+	}
+	document.getElementsByTagName("body")[0].addEventListener("mouseleave", testScreenResolution);
+
+	//.addEventListener("onmouseleave", test);
+
+	//Nav properties only in firefox
+	/*console.log("battery : "+navigator.battery);
+	console.log("buildID : "+navigator.buildID);
+	console.log("mediaDevices : "+navigator.mediaDevices);
+	console.log("moz get user media : "+navigator.mozGetUserMedia);
+	console.log("oscpu : "+navigator.oscpu);
+	console.log("registerContentHandler : "+navigator.registerContentHandler);
+	console.log("taintEnabled : "+navigator.taintEnabled);
+	console.log("navigator.mozPay : "+navigator.mozPay);
+	console.log("navigator.mozContacts : "+navigator.mozContacts);
+	console.log("navigator.mozApps : "+navigator.mozApps);
+	console.log("navigator.mozTCPSocket : "+navigator.mozTCPSocket);
+
+	//Nav properties only in chrome 
+	console.log("get battery : "+navigator.getBattery());
+	console.log("getStorageUpdates : "+navigator.getStorageUpdates);
+	console.log("hardwareConcurrency : "+navigator.hardwareConcurrency);
+	console.log("maxTouchPoints : "+navigator.maxTouchPoints);
+	console.log("permissions : "+navigator.permissions);
+	console.log("requestMIDIAccess : "+navigator.requestMIDIAccess());
+	console.log("serviceWorker : "+navigator.serviceWorker);
+	console.log("unregisterProtocolHandler : "+navigator.unregisterProtocolHandler);
+	console.log("webkitGetUserMedia : "+navigator.webkitGetUserMedia);
+	console.log("webkitPersistentStorage : "+navigator.webkitPersistentStorage);
+	console.log("webkitTemporaryStorage : "+navigator.webkitTemporaryStorage);
+
+*/
+
+
+
+
+
+
+
+
+
+
+
+</script>
+
+</html>
