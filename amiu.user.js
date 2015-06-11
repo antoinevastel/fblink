@@ -13,15 +13,16 @@
   check the prototype of navigator object because there seems to be mistakes
   check regexp on windows and with different ua
   think about letting getters for properties (which would return "undefined" even though they are not present so that we count the number of access
+  find new values for vendor and vendorSub : warning !! seems to be bound with the userAgent
 */
 
-//In the future this seed will be generated using python so that it will be constant during a whole session of browsing
-var seed = 3;
+
+//Line before seed
+var seed = 3; 
 //All the following variables will be defined using python
-var userAgent = "Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:38.0) Gecko/20100101 Firefox/38.0";
-var language = "en";
-var languages = "en,fr;q=0.5";
-var platform = "Linux x86_64";
+var userAgent = navigator.userAgent;
+var language = navigator.language;
+var languages = navigator.languages;
 
 //We define a new screen resolution
 var currentWidth = screen.width;
@@ -42,13 +43,14 @@ function indexLimitValue(value, tab){
   return cpt;
 }
 
-if(seed % 2 == 0){
-  var mult = -1
-  var browser = "chrome"
-}else{
+if(userAgent.indexOf("Firefox") > -1){
   var mult = 1;
   var browser = "firefox";
+}else{
+  var mult = -1;
+  var browser = "chrome";
 }
+console.log("browser is "+browser);
 
 var indexNewWidth = (indexLimitValue(currentWidth, listWidth) + mult*4) % listWidth.length;
 var indexNewHeight = (indexLimitValue(currentHeight, listHeight) + mult*4) % listHeight.length;
@@ -111,10 +113,8 @@ var appName = 'Netscape';
 var reAppVersionChrome = /[0-9.]+[\w\W]+\/[\w\W]+/;
 var reAppVersionFirefox = /[0-9.]+ \([A-Z0-9]*/;
 if(browser ==="chrome"){
-  console.log("test1");
   var appVersion = userAgent.match(reAppVersionChrome)[0];
 }else{
-  console.log("test2");
   var appVersion = userAgent.match(reAppVersionFirefox)[0]+")";
 }
 
@@ -243,6 +243,26 @@ if(browser === "firefox"){
 }
 //end oscpu
 
+//vendor and vendorSub
+if(browser === "chrome"){
+  vendor = "Google Inc.";
+}else{
+  vendor ="";
+}
+
+vendorSub ="";
+//end vendor and vendorSub
+
+//Cookies and java
+if(seed % 3 == 0){
+  cookieEnabled = false;
+}else{
+  cookieEnabled = true;
+}
+
+javaEnabled = false;
+//End cookies and java
+
 ///Language and languages :
 
 
@@ -346,11 +366,11 @@ Object.defineProperty(navigator, 'productSub', {
 });
 
 Object.defineProperty(navigator, 'vendor', {
-  get: function(){myController.navigatorAccessed();return 'fake vendor';}
+  get: function(){myController.navigatorAccessed();return vendor;}
 });
 
 Object.defineProperty(navigator, 'vendorSub', {
-  get: function(){myController.navigatorAccessed();return 'fake vendorSub';}
+  get: function(){myController.navigatorAccessed();return vendorSub;}
 });
 
 if(browser === "firefox"){
@@ -370,8 +390,12 @@ if(browser ==="firefox"){
 
 //cookies enabled
 Object.defineProperty(navigator, 'cookieEnabled', {
-  get: function(){myController.navigatorAccessed();return 'fake cookie';}
+  get: function(){myController.navigatorAccessed();return cookieEnabled;}
 });
+
+navigator.javaEnabled = function(){
+  return javaEnabled;
+}
 
 /*
   Important attributes for plugins :
@@ -387,36 +411,34 @@ Object.defineProperty(navigator, 'plugins', {
   value: myController.fakePlugins()
 });
 
-navigator.javaEnabled = function(){
-  return true;
-}
 
 //We lie to give the impression that we are on chrome
 //We delete navigator properties which are only on firefox
-delete Object.getPrototypeOf(navigator).buildID;
-delete Object.getPrototypeOf(navigator).battery;
-delete Object.getPrototypeOf(navigator).mediaDevices;
-delete Object.getPrototypeOf(navigator).mozGetUserMedia;
-delete Object.getPrototypeOf(navigator).oscpu;
-delete Object.getPrototypeOf(navigator).registerContentHandler;
-delete Object.getPrototypeOf(navigator).taintEnabled;
+if(browser === "chrome"){
+  delete Object.getPrototypeOf(navigator).buildID;
+  delete Object.getPrototypeOf(navigator).battery;
+  delete Object.getPrototypeOf(navigator).mediaDevices;
+  delete Object.getPrototypeOf(navigator).mozGetUserMedia;
+  delete Object.getPrototypeOf(navigator).oscpu;
+  delete Object.getPrototypeOf(navigator).registerContentHandler;
+  delete Object.getPrototypeOf(navigator).taintEnabled;
 
-Object.defineProperty(navigator, 'mozPay', {
-  get: function(){myController.navigatorAccessed();return "undefined";}
-});
+  Object.defineProperty(navigator, 'mozPay', {
+    get: function(){myController.navigatorAccessed();return "undefined";}
+  });
 
-Object.defineProperty(navigator, 'mozContacts', {
-  get: function(){myController.navigatorAccessed();return "undefined";}
-});
+  Object.defineProperty(navigator, 'mozContacts', {
+    get: function(){myController.navigatorAccessed();return "undefined";}
+  });
 
-Object.defineProperty(navigator, 'mozApps', {
-  get: function(){myController.navigatorAccessed();return "undefined";}
-});
+  Object.defineProperty(navigator, 'mozApps', {
+    get: function(){myController.navigatorAccessed();return "undefined";}
+  });
 
-Object.defineProperty(navigator, 'mozTCPSocket', {
-  get: function(){myController.navigatorAccessed();return "undefined";}
-});
-
+  Object.defineProperty(navigator, 'mozTCPSocket', {
+    get: function(){myController.navigatorAccessed();return "undefined";}
+  });
+}
 //we add navigator properties which are on chrome but not on firefox
 //navigator.prototype.getBattery = new Object();
 navigator.__proto__["getBattery"] =function(){
