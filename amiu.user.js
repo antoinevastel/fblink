@@ -12,12 +12,13 @@
   spoof navigator.mimeTypes
   check the prototype of navigator object because there seems to be mistakes
   check regexp on windows and with different ua
+  think about letting getters for properties (which would return "undefined" even though they are not present so that we count the number of access
 */
 
 //In the future this seed will be generated using python so that it will be constant during a whole session of browsing
-var seed = 4;
+var seed = 3;
 //All the following variables will be defined using python
-var userAgent = "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/43.0.2357.81 Safari/537.36";
+var userAgent = "Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:38.0) Gecko/20100101 Firefox/38.0";
 var language = "en";
 var languages = "en,fr;q=0.5";
 var platform = "Linux x86_64";
@@ -235,6 +236,13 @@ if(browser ==="chrome"){
 console.log("first platform : "+platform);
 //End platform
 
+//oscpu
+//oscpu is only for firefox and is equal to the platform
+if(browser === "firefox"){
+  var oscpu = platform;
+}
+//end oscpu
+
 ///Language and languages :
 
 
@@ -354,10 +362,11 @@ if(browser === "firefox"){
 
 
 //Oscpu : avalaible only on firefox
-//Create only if firefox ! 
-Object.defineProperty(navigator, 'oscpu', {
-  get: function(){myController.navigatorAccessed();return 'fake oscpu';}
-});
+if(browser ==="firefox"){
+  Object.defineProperty(navigator, 'oscpu', {
+    get: function(){myController.navigatorAccessed();return oscpu;}
+  });
+}
 
 //cookies enabled
 Object.defineProperty(navigator, 'cookieEnabled', {
