@@ -19,7 +19,23 @@ class Firefox():
 
 
     def setLanguages(self):
-        self.languages = 'user_pref("intl.accept_languages", "en,fr;q=0.5");\n'
+        listLanguages = ["en-US", "en","fr","fr-FR","en-GB","en-au","en-CA"]
+        choosenLanguages = list()
+        for i in range(0,3):
+            v = random.randint(0, len(listLanguages)-1)
+            if listLanguages[v] != -1:
+                choosenLanguages.append(listLanguages[v])
+            else:
+                while listLanguages[v] == -1:
+                    v+=1
+                choosenLanguages.append(listLanguages[v])
+            listLanguages[v]=-1
+
+        choosenLanguagesStr = choosenLanguages[0]+","
+        choosenLanguagesStr += choosenLanguages[1]+";q=0.8,"
+        choosenLanguagesStr += choosenLanguages[2]+";q=0.5"
+
+        self.languages = 'user_pref("intl.accept_languages", "'+choosenLanguagesStr+'");\n'
 
     def setAcceptHttp(self):
         self.acceptHttp = 'user_pref("network.http.accept.default", "text/html,application/xhtml+xml,application/xml;q=0.9,/;q=0.8");\n'
