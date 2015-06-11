@@ -10,12 +10,12 @@
 /*
   TODO : change http headers sent by browser
   spoof navigator.mimeTypes
+  check the prototype of navigator object because there seems to be mistakes
+  check regexp on windows and with different ua
 */
 
-console.log("product "+navigator.product);
-console.log("platform "+navigator.platform);
 //In the future this seed will be generated using python so that it will be constant during a whole session of browsing
-var seed = 5;
+var seed = 4;
 //All the following variables will be defined using python
 var userAgent = "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/43.0.2357.81 Safari/537.36";
 var language = "en";
@@ -110,8 +110,10 @@ var appName = 'Netscape';
 var reAppVersionChrome = /[0-9.]+[\w\W]+\/[\w\W]+/;
 var reAppVersionFirefox = /[0-9.]+ \([A-Z0-9]*/;
 if(browser ==="chrome"){
+  console.log("test1");
   var appVersion = userAgent.match(reAppVersionChrome)[0];
 }else{
+  console.log("test2");
   var appVersion = userAgent.match(reAppVersionFirefox)[0]+")";
 }
 
@@ -158,6 +160,7 @@ if(browser == "chrome"){
   }
 
   var productSub = yearProductSub+monthProductSub+dayProductSub;
+  console.log("var productSub : "+productSub);
 }
 
 //End of product sub
@@ -203,13 +206,34 @@ if(browser === "firefox"){
   var found = false;
   while(i >= 0 && !found){
     if(seed % i == 0){
-      var hourBuild = i.toString();
+      if(i < 10){
+        var hourBuild = "0"+i.toString();
+      }else{
+        var hourBuild = i.toString();
+      }
       found = true;
     }
     i--;
   }
+
+  var buildID = yearBuildId+monthBuild+dayBuild+hourBuild;
+  console.log("var buildID : "+buildID);
 }
 
+//Platform
+//The platform has to be the same as the one we can find in the userAgent
+var rePlatformChrome = /; (Linux|Windows) [\w\W]+[\d]+\) /;
+var rePlatformFirefox = /; (Linux|Windows) [\w\W]+[\d]+; /;
+if(browser ==="chrome"){
+  var platform = userAgent.match(rePlatformChrome)[0];
+  platform = platform.substring(2, platform.length-2);
+}else{
+  var platform = userAgent.match(rePlatformFirefox)[0];
+  platform = platform.substring(2, platform.length-2);
+}
+
+console.log("first platform : "+platform);
+//End platform
 
 ///Language and languages :
 
@@ -310,7 +334,7 @@ Object.defineProperty(navigator, 'product', {
 });
 
 Object.defineProperty(navigator, 'productSub', {
-  get: function(){myController.navigatorAccessed();return 'fake productSub';}
+  get: function(){myController.navigatorAccessed();return productSub;}
 });
 
 Object.defineProperty(navigator, 'vendor', {
@@ -321,9 +345,11 @@ Object.defineProperty(navigator, 'vendorSub', {
   get: function(){myController.navigatorAccessed();return 'fake vendorSub';}
 });
 
-Object.defineProperty(navigator, 'buildID', {
-  get: function(){myController.navigatorAccessed();return 'fake buildID';}
-});
+if(browser === "firefox"){
+  Object.defineProperty(navigator, 'buildID', {
+    get: function(){myController.navigatorAccessed();return buildID;}
+  });
+}
 
 
 
