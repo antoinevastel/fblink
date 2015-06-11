@@ -9,12 +9,13 @@
 // ==/UserScript==
 /*
   TODO : change http headers sent by browser
+  spoof navigator.mimeTypes
 */
 
 console.log("product "+navigator.product);
 console.log("platform "+navigator.platform);
 //In the future this seed will be generated using python so that it will be constant during a whole session of browsing
-var seed = 4;
+var seed = 5;
 //All the following variables will be defined using python
 var userAgent = "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/43.0.2357.81 Safari/537.36";
 var language = "en";
@@ -115,41 +116,98 @@ if(browser ==="chrome"){
 }
 
 var appCodeName = "Mozilla";
-if(seed % 3 == 0){
-  var yearBuildId = "2015";
+var product = "Gecko";
+
+//Product sub
+if(browser == "chrome"){
+  var productSub = "20030107";
 }else{
-  var yearBuildId = "2014";
+
+  if(seed % 3 == 0){
+    var yearProductSub = "2014";
+  }else{
+    var yearProductSub = "2013";
+  }
+
+  var i = 12;
+  var found = false;
+  while(i >= 0 && !found){
+    if(seed % i == 0){
+      if(i < 10){
+        var monthProductSub = "0"+i.toString();
+      }else{
+        var monthProductSub = i.toString();
+      }
+      found = true;
+    }
+    i--;
+  }
+
+  var i = 29;
+  var found = false;
+  while(i >= 0 && !found){
+    if(seed % i == 0){
+      if(i < 10){
+        var dayProductSub = "0"+i.toString();
+      }else{
+        var dayProductSub = i.toString();
+      }
+      found = true;
+    }
+    i--;
+  }
+
+  var productSub = yearProductSub+monthProductSub+dayProductSub;
 }
 
-var i = 12;
-var found = false;
-while(i >= 0 && !found){
-  if(seed % i == 0){
-    var monthBuild = i.toString();
-    found = true;
+//End of product sub
+
+//BuildID : only for firefox
+if(browser === "firefox"){
+  if(seed % 3 == 0){
+    var yearBuildId = "2015";
+  }else{
+    var yearBuildId = "2014";
   }
-  i--;
-}
+
+  var i = 12;
+  var found = false;
+  while(i >= 0 && !found){
+    if(seed % i == 0){
+      if(i < 10){
+        var monthBuild = "0"+i.toString();
+      }else{
+        var monthBuild = i.toString();
+      }
+      found = true;
+    }
+    i--;
+  }
 
 
-var i = 29;
-var found = false;
-while(i >= 0 && !found){
-  if(seed % i == 0){
-    var dayBuild = i.toString();
-    found = true;
+  var i = 29;
+  var found = false;
+  while(i >= 0 && !found){
+    if(seed % i == 0){
+      if(i < 10){
+        var dayBuild = "0"+i.toString();
+      }else{
+        var dayBuild = i.toString();
+      }
+      found = true;
+    }
+    i--;
   }
-  i--;
-}
 
-var i = 24;
-var found = false;
-while(i >= 0 && !found){
-  if(seed % i == 0){
-    var hourBuild = i.toString();
-    found = true;
+  var i = 24;
+  var found = false;
+  while(i >= 0 && !found){
+    if(seed % i == 0){
+      var hourBuild = i.toString();
+      found = true;
+    }
+    i--;
   }
-  i--;
 }
 
 
@@ -248,7 +306,7 @@ Object.defineProperty(navigator, 'platform', {
 });
 
 Object.defineProperty(navigator, 'product', {
-  get: function(){myController.navigatorAccessed();return 'fake product';}
+  get: function(){myController.navigatorAccessed();return product;}
 });
 
 Object.defineProperty(navigator, 'productSub', {
