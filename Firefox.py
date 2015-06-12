@@ -66,7 +66,8 @@ class Firefox():
 
 
     def run(self):
-        subprocess.Popen('firefox')
+        firefoxProcess = subprocess.Popen('firefox')
+        return firefoxProcess
 
     def setUserAgent(self):
         self.listUAs =["Mozilla/5.0 (Windows NT 6.1; WOW64; rv:34.0) Gecko/20100101 Firefox/34.0",
@@ -179,13 +180,9 @@ class Firefox():
 
         #we define the variable seed in javascript file
         for line in fileinput.input("/home/avastel/.mozilla/firefox/kwdl11go.default/gm_scripts/amiu/amiu.user.js", inplace=True):
-            if "//Line before seed" in line:
-                print("//Line before seed")
+            if "var seed = " in line:
                 print "%s" % ("var seed = "+str(self.seed))
             else:
-                if "var seed = " in line:
-                    print("")
-                else:
-                    newLine = line.replace("\n","")
-                    print(newLine)
+                newLine = line.replace("\n","")
+                print(newLine)
 
