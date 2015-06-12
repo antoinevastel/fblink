@@ -15,65 +15,23 @@
   check regexp on windows and with different ua
   think about letting getters for properties (which would return "undefined" even though they are not present so that we count the number of access
   find new values for vendor and vendorSub : warning !! seems to be bound with the userAgent
-  create a list where fake chrome bugs
   detect sites which fingerprint to find if they use cookies, localStorage etc 
 */
 
 whiteList = ["www.youtube.com","twitter.com"];
 
-var seed = 30;
+var seed = 37; var browser = 'firefox'; var mult = -1; var os = 'Windows';var newWidth = 2160; var newHeight = 1344; var availWidth = 2106; var availHeight = 1310; var newColorDepth = 4; var pixelDepth = 4; var timezoneOffset = -540; var productSub = '20131123'; var buildID = '2014022102';  
+
 //All the following variables will be defined using python
 var userAgent = navigator.userAgent;
 var language = navigator.language;
 var languages = navigator.languages;
 
-//We define a new screen resolution
-var currentWidth = screen.width;
-var currentHeight = screen.height;
-var currentColorDepth = screen.colorDepth;
 
-var listWidth = [832, 960, 1024, 1120, 1136, 1152, 1280, 1334, 1366, 1400, 1440, 1600, 1680, 1792, 1800, 1856, 1920, 2048, 2160, 2304, 2538, 2560, 2880, 3200, 3440, 3840, 4096, 5120];
-var listHeight = [480, 540, 544, 576, 600, 624, 640, 720, 750, 768, 800, 832, 854, 864, 900, 960, 1024, 1050, 1080, 1152, 1200, 1280, 1344, 1392, 1400, 1440, 1536, 1600, 1700, 1728, 1800, 1920, 2048, 2100, 2160, 2304, 2400, 2880, 3072, 3200, 4096];
-var listColorDepth = [4, 8, 16, 24, 32];
+console.log("browser is "+browser+", mult is : "+mult+", os is : "+os);
 
-function indexLimitValue(value, tab){
-  var found = false;
-  var cpt = 0;
-  while(!found && cpt < tab.length && tab[cpt] <= value){
-    cpt++;
-  }
 
-  return cpt;
-}
 
-if(userAgent.indexOf("Firefox") > -1){
-  var mult = 1;
-  var browser = "firefox";
-}else{
-  var mult = -1;
-  var browser = "chrome";
-}
-console.log("browser is "+browser);
-
-if(userAgent.indexOf("Windows") > -1){
-  var os = "Windows";
-}else{
-  var os = "Linux";
-}
-
-var indexNewWidth = (indexLimitValue(currentWidth, listWidth) + mult*4) % listWidth.length;
-var indexNewHeight = (indexLimitValue(currentHeight, listHeight) + mult*4) % listHeight.length;
-var indexNewColorDepth = (indexLimitValue(currentColorDepth, listColorDepth) + mult*2) % listColorDepth.length;
-var newWidth = listWidth[indexNewWidth];
-var newHeight = listHeight[indexNewHeight];
-var newColorDepth = listColorDepth[indexNewColorDepth];
-
-var availWidth = Math.floor(0.975*newWidth);
-var availHeight = Math.floor(0.975*newHeight);
-//screen.pixelDepth and screen.colorDepth should always be the same
-var pixelDepth = newColorDepth;
-
-//End of new screen resolution definition
 
 //Plugins definition
 function PluginChrome(name, description, filename){
@@ -130,57 +88,6 @@ if(browser ==="chrome"){
 var appCodeName = "Mozilla";
 var product = "Gecko";
 
-//Product sub
-if(browser == "chrome"){
-  var productSub = "20030107";
-}else{
-
-  if(seed % 3 == 0){
-    var yearProductSub = "2014";
-  }else{
-    var yearProductSub = "2013";
-  }
-
-
-  var monthProductSub = ((seed % 12) +1).toString();
-  if((seed % 12) +1 < 10){
-    monthProductSub = "0"+monthProductSub;
-  }
-
-  var dayProductSub = ((seed % 29) +1).toString();
-  if((seed % 29) +1 < 10){
-    dayProductSub = "0"+dayProductSub;
-  }
-
-  var productSub = yearProductSub+monthProductSub+dayProductSub;
-  console.log("var productSub : "+productSub);
-}
-
-//End of product sub
-
-//BuildID : only for firefox
-if(browser === "firefox"){
-  var yearBuildId = yearProductSub;
-
-  var monthBuild = (((seed + 3) % 12)+1).toString();
-  if(((seed + 3) % 12)+1 < 10){
-    monthBuild = "0"+monthBuild;
-  }
-
-
-  var dayBuild = (((seed + 1 )% 29)+1).toString();
-  if(((seed + 1 )% 29)+1 < 10){
-    dayBuild = "0"+dayBuild
-  }
-
-  var hourBuild = (((seed +7) % 24)+1).toString();
-  if(((seed +7) % 24)+1 < 10){
-    hourBuild = "0"+hourBuild;
-  }
-
-  var buildID = yearBuildId+monthBuild+dayBuild+hourBuild;
-  console.log("var buildID : "+buildID);
-}
 
 //Platform
 //The platform has to be the same as the one we can find in the userAgent
@@ -224,21 +131,10 @@ vendorSub ="";
 //end vendor and vendorSub
 
 //Cookies and java
-if(seed % 3 == 0){
-  cookieEnabled = false;
-}else{
-  cookieEnabled = true;
-}
-
+eEnabled = true;
 javaEnabled = false;
 //End cookies and java
 
-//Timezone offset
-
-var listTimezoneOffset = [-60, 300, -120, 0, 480, -540, 360, 420, 240, -480, -660, -180, 180, 120, -330, -600, -780, -240, -420];
-timezoneOffset = listTimezoneOffset[seed % listTimezoneOffset];
-
-//End timezone offset
 
 
 //End of navigator definition
