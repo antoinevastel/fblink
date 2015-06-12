@@ -6,6 +6,7 @@
 // @version     1
 // @grant       none
 // @run-at document-start
+// @noframes
 // ==/UserScript==
 /*
   TODO : change http headers sent by browser
@@ -14,11 +15,13 @@
   check regexp on windows and with different ua
   think about letting getters for properties (which would return "undefined" even though they are not present so that we count the number of access
   find new values for vendor and vendorSub : warning !! seems to be bound with the userAgent
+  create a list where fake chrome bugs
+  detect sites which fingerprint to find if they use cookies, localStorage etc 
 */
 
+whiteList = ["www.youtube.com","twitter.com"];
 
-//Line before seed
-var seed = 3; 
+var seed = 30;
 //All the following variables will be defined using python
 var userAgent = navigator.userAgent;
 var language = navigator.language;
@@ -51,6 +54,12 @@ if(userAgent.indexOf("Firefox") > -1){
   var browser = "chrome";
 }
 console.log("browser is "+browser);
+
+if(userAgent.indexOf("Windows") > -1){
+  var os = "Windows";
+}else{
+  var os = "Linux";
+}
 
 var indexNewWidth = (indexLimitValue(currentWidth, listWidth) + mult*4) % listWidth.length;
 var indexNewHeight = (indexLimitValue(currentHeight, listHeight) + mult*4) % listHeight.length;
@@ -132,32 +141,15 @@ if(browser == "chrome"){
     var yearProductSub = "2013";
   }
 
-  var i = 12;
-  var found = false;
-  while(i >= 0 && !found){
-    if(seed % i == 0){
-      if(i < 10){
-        var monthProductSub = "0"+i.toString();
-      }else{
-        var monthProductSub = i.toString();
-      }
-      found = true;
-    }
-    i--;
+
+  var monthProductSub = ((seed % 12) +1).toString();
+  if((seed % 12) +1 < 10){
+    monthProductSub = "0"+monthProductSub;
   }
 
-  var i = 29;
-  var found = false;
-  while(i >= 0 && !found){
-    if(seed % i == 0){
-      if(i < 10){
-        var dayProductSub = "0"+i.toString();
-      }else{
-        var dayProductSub = i.toString();
-      }
-      found = true;
-    }
-    i--;
+  var dayProductSub = ((seed % 29) +1).toString();
+  if((seed % 29) +1 < 10){
+    dayProductSub = "0"+dayProductSub;
   }
 
   var productSub = yearProductSub+monthProductSub+dayProductSub;
@@ -168,53 +160,22 @@ if(browser == "chrome"){
 
 //BuildID : only for firefox
 if(browser === "firefox"){
-  if(seed % 3 == 0){
-    var yearBuildId = "2015";
-  }else{
-    var yearBuildId = "2014";
-  }
+  var yearBuildId = yearProductSub;
 
-  var i = 12;
-  var found = false;
-  while(i >= 0 && !found){
-    if(seed % i == 0){
-      if(i < 10){
-        var monthBuild = "0"+i.toString();
-      }else{
-        var monthBuild = i.toString();
-      }
-      found = true;
-    }
-    i--;
+  var monthBuild = (((seed + 3) % 12)+1).toString();
+  if(((seed + 3) % 12)+1 < 10){
+    monthBuild = "0"+monthBuild;
   }
 
 
-  var i = 29;
-  var found = false;
-  while(i >= 0 && !found){
-    if(seed % i == 0){
-      if(i < 10){
-        var dayBuild = "0"+i.toString();
-      }else{
-        var dayBuild = i.toString();
-      }
-      found = true;
-    }
-    i--;
+  var dayBuild = (((seed + 1 )% 29)+1).toString();
+  if(((seed + 1 )% 29)+1 < 10){
+    dayBuild = "0"+dayBuild
   }
 
-  var i = 24;
-  var found = false;
-  while(i >= 0 && !found){
-    if(seed % i == 0){
-      if(i < 10){
-        var hourBuild = "0"+i.toString();
-      }else{
-        var hourBuild = i.toString();
-      }
-      found = true;
-    }
-    i--;
+  var hourBuild = (((seed +7) % 24)+1).toString();
+  if(((seed +7) % 24)+1 < 10){
+    hourBuild = "0"+hourBuild;
   }
 
   var buildID = yearBuildId+monthBuild+dayBuild+hourBuild;
@@ -225,12 +186,21 @@ if(browser === "firefox"){
 //The platform has to be the same as the one we can find in the userAgent
 var rePlatformChrome = /; (Linux|Windows) [\w\W]+[\d]+\) /;
 var rePlatformFirefox = /; (Linux|Windows) [\w\W]+[\d]+; /;
+listPlatformsWindows = ["Win32", "Win64"];
 if(browser ==="chrome"){
-  var platform = userAgent.match(rePlatformChrome)[0];
-  platform = platform.substring(2, platform.length-2);
+  if(os === "Windows"){
+    var platform = listPlatformsWindows[seed%listPlatformsWindows.length];
+  }else{
+    var platform = userAgent.match(rePlatformChrome)[0];
+    platform = platform.substring(2, platform.length-2);
+  }
 }else{
-  var platform = userAgent.match(rePlatformFirefox)[0];
-  platform = platform.substring(2, platform.length-2);
+  if(os == "Windows"){
+    var platform = listPlatformsWindows[seed%listPlatformsWindows.length];
+  }else{
+    var platform = userAgent.match(rePlatformFirefox)[0];
+    platform = platform.substring(2, platform.length-2);
+  }
 }
 
 console.log("first platform : "+platform);
@@ -263,7 +233,12 @@ if(seed % 3 == 0){
 javaEnabled = false;
 //End cookies and java
 
-///Language and languages :
+//Timezone offset
+
+var listTimezoneOffset = [-60, 300, -120, 0, 480, -540, 360, 420, 240, -480, -660, -180, 180, 120, -330, -600, -780, -240, -420];
+timezoneOffset = listTimezoneOffset[seed % listTimezoneOffset];
+
+//End timezone offset
 
 
 //End of navigator definition
@@ -372,6 +347,8 @@ Object.defineProperty(navigator, 'vendor', {
 Object.defineProperty(navigator, 'vendorSub', {
   get: function(){myController.navigatorAccessed();return vendorSub;}
 });
+
+Date.prototype.getTimezoneOffset = function() {return 0;};
 
 if(browser === "firefox"){
   Object.defineProperty(navigator, 'buildID', {
