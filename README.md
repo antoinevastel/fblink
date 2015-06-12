@@ -1,2 +1,2 @@
 # famiu
-fast amiunique
+fast version of Blink
