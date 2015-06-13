@@ -4,12 +4,31 @@ __author__ = 'avastel'
 import subprocess
 import random
 import fileinput
-import Tkinter as tk
+import tkinter as tk
 import math
+import platform
+import os
 
 class Firefox():
 
     def __init__(self):
+        if platform.system() == "Windows":
+            self.platformSystem = "Windows"
+            self.prefsJsPath = r"C:\Users\antoine\AppData\Roaming\Mozilla\Firefox\Profiles\euuyo54b.default\prefs.js"
+            self.userJsPath = r"C:\Users\antoine\AppData\Roaming\Mozilla\Firefox\Profiles\euuyo54b.default\user.js"
+            self.gmScript = r"C:\Users\antoine\AppData\Roaming\Mozilla\Firefox\Profiles\euuyo54b.default\gm_scripts\amiu\amiu.user.js"
+            self.firefox = os.path.join('C:\\', 'Program Files (x86)', 'Mozilla Firefox', 'firefox.exe')
+            self.cookies = r"C:\Users\antoine\AppData\Roaming\Mozilla\Firefox\Profiles\euuyo54b.default\cookies.sqlite"
+            self.delCache = r"del /Q C:\Users\antoine\AppData\Local\Mozilla\Firefox\Profiles\euuyo54b.default\cache2\entries\*"
+        else:
+            self.platformSystem ="Linux"
+            self.prefsJsPath = "/home/avastel/.mozilla/firefox/kwdl11go.default/prefs.js"
+            self.userJsPath = "/home/avastel/.mozilla/firefox/kwdl11go.default/user.js"
+            self.gmScript = "/home/avastel/.mozilla/firefox/kwdl11go.default/gm_scripts/amiu/amiu.user.js"
+            self.firefox = "firefox"
+            self.cookies = "/home/avastel/.mozilla/firefox/kwdl11go.default/cookies.sqlite"
+            self.delCache = "rm /home/avastel/.cache/mozilla/firefox/kwdl11go.default/cache2/entries/*"
+
         self.setUserAgent()
         self.setLanguages()
         self.setAcceptEncoding()
@@ -59,12 +78,11 @@ class Firefox():
 
     def setPreferences(self):
         #set kwdl11 ... part with a variable
-        with open("/home/avastel/.mozilla/firefox/kwdl11go.default/user.js", "w") as prefs:
+        with open(self.userJsPath, "w") as prefs:
             prefs.write("\n"+self.userAgent)
-
             prefs.close()
 
-        with open("/home/avastel/.mozilla/firefox/kwdl11go.default/prefs.js", "a") as prefs:
+        with open(self.prefsJsPath, "a") as prefs:
             prefs.write("\n"+self.languages)
             prefs.write(self.acceptHttp)
             prefs.write(self.acceptEncoding)
@@ -73,7 +91,7 @@ class Firefox():
 
 
     def run(self):
-        firefoxProcess = subprocess.Popen('firefox')
+        firefoxProcess = subprocess.Popen(self.firefox)
         return firefoxProcess
 
     def setUserAgent(self):
@@ -205,8 +223,8 @@ class Firefox():
         listHeight = [480, 540, 544, 576, 600, 624, 640, 720, 750, 768, 800, 832, 854, 864, 900, 960, 1024, 1050, 1080, 1152, 1200, 1280, 1344, 1392, 1400, 1440, 1536, 1600, 1700, 1728, 1800, 1920, 2048, 2100, 2160, 2304, 2400, 2880, 3072, 3200, 4096]
         listColorDepth = [4, 8, 16, 24, 32]
 
-        indexNewWidth = (self.indexLimitValue(self.width, listWidth) + self.mult*4) % len(listWidth)
-        indexNewHeight = (self.indexLimitValue(self.height, listHeight) + self.mult*4) % len(listHeight)
+        indexNewWidth = (self.indexLimitValue(self.width, listWidth) + self.mult*6) % len(listWidth)
+        indexNewHeight = (self.indexLimitValue(self.height, listHeight) + self.mult*6) % len(listHeight)
         self.width = listWidth[indexNewWidth];
         self.height = listHeight[indexNewHeight];
         self.availWidth = int(math.floor(0.975 * self.width))
@@ -274,7 +292,7 @@ class Firefox():
         self.seed = random.randint(0, 200)
         vars =""
         #we define the variable seed in javascript file
-        for line in fileinput.input("/home/avastel/.mozilla/firefox/kwdl11go.default/gm_scripts/amiu/amiu.user.js", inplace=True):
+        for line in fileinput.input(self.gmScript, inplace=True):
             if "var seed = " in line:
                 vars += "var seed = "+str(self.seed)+"; var browser = '"+self.browser+"'; var mult = "+str(self.mult)+"; var os = '"+self.os+"';"
                 vars += "var newWidth = "+str(self.width)+"; var newHeight = "+str(self.height)+"; var availWidth = "+str(self.availWidth)+"; "
