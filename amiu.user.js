@@ -142,9 +142,14 @@ javaEnabled = false;
 
 var myController = {
   nbAccess : 0,
+  alertDisplay : 0,
   navigatorAccessed : function(){
     this.nbAccess ++;
-    //console.log("Nb access : "+this.nbAccess);
+    console.log("Nb access : "+this.nbAccess);
+	if(this.nbAccess > 8 && this.alertDisplay == 0){
+		alert("You've probably been fingerprinted !");
+		this.alertDisplay = 1;
+	}
   },
   fakePlugins : function(){
 
@@ -157,7 +162,7 @@ var myController = {
     var nbNewPlugins = seed % 5; //Max 5 new plugins
     nbPluginsOriginal = navigator.plugins.length;
     newPlugins = new Array();
-    
+
     var index = nbNewPlugins;
     for(i= 0; i < nbNewPlugins; i++){
         newPlugins[i] = listPlugins[index];
@@ -167,7 +172,7 @@ var myController = {
           index++;
         }
     }
- 
+
     return newPlugins;
 
   }
