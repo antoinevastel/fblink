@@ -20,7 +20,7 @@ def main():
 
     #we delete the cache because of cookieless use tracking
     #see this article : http://robertheaton.com/2014/01/20/cookieless-user-tracking-for-douchebags/
-    os.system("rm /home/avastel/.cache/mozilla/firefox/kwdl11go.default/cache2/entries/*")
+    os.system("rm -r /home/avastel/.cache/mozilla/firefox/kwdl11go.default/cache2/entries/")
 
 
     print("end of execution")

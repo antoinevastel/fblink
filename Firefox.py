@@ -73,7 +73,7 @@ class Firefox():
 
 
     def run(self):
-        firefoxProcess = subprocess.Popen('firefox')
+        firefoxProcess = subprocess.Popen(["firefox", "-private", "http://bluecava.com/opt-out/"])
         return firefoxProcess
 
     def setUserAgent(self):
@@ -207,8 +207,8 @@ class Firefox():
 
         indexNewWidth = (self.indexLimitValue(self.width, listWidth) + self.mult*4) % len(listWidth)
         indexNewHeight = (self.indexLimitValue(self.height, listHeight) + self.mult*4) % len(listHeight)
-        self.width = listWidth[indexNewWidth];
-        self.height = listHeight[indexNewHeight];
+        self.width = listWidth[indexNewWidth]
+        self.height = listHeight[indexNewHeight]
         self.availWidth = int(math.floor(0.975 * self.width))
         self.availHeight = int(math.floor(0.975 * self.height))
 

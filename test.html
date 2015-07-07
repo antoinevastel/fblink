@@ -72,7 +72,7 @@
 		navObjectSorted += navObjectProp[i]+", ";
 	} 
 	
-	//console.log(navObjectSorted);
+	console.log(navObjectSorted);
 	/* 
 		result for firefox : 
 
@@ -82,7 +82,9 @@
 		
 		"appCodeName, appName, appVersion, cookieEnabled, doNotTrack, geolocation, getBattery, getGamepads, getStorageUpdates, hardwareConcurrency, javaEnabled, language, languages, maxTouchPoints, mimeTypes, onLine, permissions, platform, plugins, product, productSub, registerProtocolHandler, requestMIDIAccess, requestMediaKeySystemAccess, sendBeacon, serviceWorker, unregisterProtocolHandler, userAgent, vendor, vendorSub, vibrate, webkitGetUserMedia, webkitPersistentStorage, webkitTemporaryStorage"
 
-		differences : 
+		result for opera
+
+		differences firefox/chrome: 
 		only in firefox : battery, buildID, mediaDevices, mozGetUserMedia, oscpu, taintEnabled, registerContentHandler
 		only in chrome : getBattery, getStorageUpdates, hardwareConcurrency, maxTouchPoints, permissions,requestMIDIAccess, serviceWorker, unregisterProtocolHandler, webkitGetUserMedia, webkitPersistentStorage, webkitTemporaryStorage
 

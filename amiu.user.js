@@ -18,8 +18,6 @@
   detect sites which fingerprint to find if they use cookies, localStorage etc 
 */
 
-whiteList = ["www.youtube.com","twitter.com"];
-
 var seed = 37; var browser = 'firefox'; var mult = -1; var os = 'Windows';var newWidth = 2160; var newHeight = 1344; var availWidth = 2106; var availHeight = 1310; var newColorDepth = 4; var pixelDepth = 4; var timezoneOffset = -540; var productSub = '20131123'; var buildID = '2014022102';  
 
 //All the following variables will be defined using python
@@ -34,49 +32,70 @@ console.log("browser is "+browser+", mult is : "+mult+", os is : "+os);
 
 
 //Plugins definition
-function PluginChrome(name, description, filename){
+function Plugin(name, description, filename){
   this.name = name;
   this.description = description;
   this.filename = filename;
 }
 
-function PluginFirefox(name, description, filename, version){
-  this.name = name;
-  this.description = description;
-  this.filename = filename;
-  this.version = version;
-}
-
-var listPluginsChrome = [new PluginChrome("Chrome Remote Desktop Viewer",'This plugin allows you to securely access other computers that have been shared with you. To use this plugin you must first install the <a href="https://chrome.google.com/remotedesktop">Chrome Remote Desktop</a> webapp.', 'internal-remoting-viewer')
-  , new PluginChrome("Chrome PDF Viewer",'', 'mhjfbmdgcfjbbpaeojofohoefgiehjai')
-  , new PluginChrome("Widevine Content Decryption Module",'Enables Widevine licenses for playback of HTML audio/video content. (version: 1.4.8.823)','libwidevinecdmadapter.so')
-  , new PluginChrome("Chrome PDF Viewer",'Portable Document Format','internal-pdf-viewer')
-  , new PluginChrome("Shockwave Flash", "Shockwave Flash 17.0 r0", "libpepflashplayer.so")
+var listPluginsChrome = [new Plugin("Chrome Remote Desktop Viewer",'This plugin allows you to securely access other computers that have been shared with you. To use this plugin you must first install the <a href="https://chrome.google.com/remotedesktop">Chrome Remote Desktop</a> webapp.', 'internal-remoting-viewer')
+  , new Plugin("Chrome PDF Viewer",'', 'mhjfbmdgcfjbbpaeojofohoefgiehjai')
+  , new Plugin("Widevine Content Decryption Module",'Enables Widevine licenses for playback of HTML audio/video content. (version: 1.4.8.823)','libwidevinecdmadapter.so')
+  , new Plugin("Chrome PDF Viewer",'Portable Document Format','internal-pdf-viewer')
+  , new Plugin("Google Update", "Google Update", "npGoogleUpdate3.dll")
+  , new Plugin("Intel® Identity Protection Technology", "Intel web components for Intel® Identity Protection Technology", "npIntelWebAPIIPT.dll")
+  , new Plugin("Java Deployment Toolkit 8.0.310.13", "NPRuntime Script Plug-in Library for JavaTM Deploy", "npDeployJava1.dll")
+  , new Plugin("JavaTM Platform SE 8 U31", "Next Generation Java Plug-in 11.31.2 for Mozilla browsers", "npjp2.dll")
+  , new Plugin("VLC Web Plugin", "VLC media player Web Plugin 2.1.3", "npvlc.dll")
+  , new Plugin("Battlelog Game Launcher", "Battlelog Game Launcher 2.6.2", "npbattlelog.dll")
+  , new Plugin("GFACE Plugin", "GFACE Plugin", "npCry39.dll")
+  , new Plugin("Google Earth Plugin", "GEPlugin", "npgeplugin.dll")
+  , new Plugin("JavaTM Platform SE 8 U25", "Next Generation Java Plug-in 11.25.2 for Mozilla browsers", "npjp2.dll")
+  , new Plugin("Pando Web Plugin", "Pando Web Plugin", "npPandoWebPlugin.dll")
+  , new Plugin("Google Talk Plugin Video Renderer", "Version 5.41.0.0", "o1dbrowserplugin.plugin")
+  , new Plugin("Java Deployment Toolkit 8.0.250.18", "NPRuntime Script Plug-in Library for JavaTM Deploy", "npDeployJava1.dll")
+  , new Plugin("JavaTM Platform SE 8 U25", "Next Generation Java Plug-in 11.25.2 for Mozilla browsers", "npjp2.dll")
+  , new Plugin("VLC Web Plugin", "VLC media player Web Plugin 2.2.0", "npvlc.dll")
+  , new Plugin("Octoshape Streaming Services", "Octoshape embedded video plugin", "sua-1401100-0-npoctoshape.dll")
+  , new Plugin("QuickTime Plug-in 7.7.5", 'The QuickTime Plugin allows you to view a wide variety of multimedia content in Web pages. For more information visit the A HREF=http:www.apple.comquicktimeQuickTimeA Web site.', "npqtplugin.dll")
+  , new Plugin("JavaTM Platform SE 7 U67", "Next Generation Java Plug-in 10.67.2 for Mozilla browsers", "npjp2.dll")
+  , new Plugin("Nokia Suite Enabler Plugin", "Nokia Suite Enabler Plugin", "npNokiaSuiteEnabler.dll")
+  , new Plugin("Ace Stream P2P Multimedia Plug-in", "ACE Stream Plug-in Version 2.2.5.1-next Copyright c 2012-2014 Innovative Digital Technologies", "npace_plugin.dll")
+  , new Plugin("NVIDIA 3D VISION", "NVIDIA 3D Vision Streaming plugin for Mozilla browsers", "npnv3dvstreaming.dll")
+  , new Plugin("iTunes Application Detector", "iTunes Detector Plug-in", "npitunes.dll")
+  , new Plugin("Skype Web Plugin", "Skype Web Plugin", "npSkypeWebPlugin.dll")
+  , new Plugin("VMware Remote Console Plug-in", "VMware Remote Console Plug-in", "np-vmware-vmrc.dll")
+  , new Plugin("WildTangent Games App V2 Presence Detector", "WildTangent Games App V2 Presence Detector", "NP_wtapp.dll")
 ];
 
-var listPluginsFirefox = [new PluginFirefox('DivX® Web Player', 'DivX Web Player version 1.4.0.233', 'libtotem-mully-plugin.so', '')
-  , new PluginFirefox('QuickTime Plug-in 7.6.6', 'The <a href="http://www.gnome.org/">Videos</a> 3.10.1 plugin handles video and audio streams.', 'libtotem-narrowspace-plugin.so', '')
-  , new PluginFirefox('Shockwave Flash','Shockwave Flash 11.2 r202','libflashplayer.so','11.2.202.466')
-  , new PluginFirefox('VLC Multimedia Plugin (compatible Videos 3.10.1)', 'The <a href="http://www.gnome.org/">Videos</a> 3.10.1 plugin handles video and audio streams.','libtotem-cone-plugin.so','')
-  , new PluginFirefox('Windows Media Player Plug-in 10 (compatible; Videos)','The <a href="http://www.gnome.org/">Videos</a> 3.10.1 plugin handles video and audio streams.','libtotem-gmp-plugin.so', '')
-  , new PluginFirefox('iTunes Application Detector', 'This plug-in detects the presence of iTunes when opening iTunes Store URLs in a web page with Firefox.','librhythmbox-itms-detection-plugin.so')
+var listPluginsFirefox = [new Plugin("DivX® Web Player", "DivX Web Player version 1.4.0.233", "libtotem-mully-plugin.so")
+  , new Plugin("QuickTime Plug-in 7.6.6", 'The <a href="http://www.gnome.org/">Videos</a> 3.10.1 plugin handles video and audio streams.', "libtotem-narrowspace-plugin.so")
+  , new Plugin("VLC Multimedia Plugin (compatible Videos 3.10.1)", 'The <a href="http://www.gnome.org/">Videos</a> 3.10.1 plugin handles video and audio streams.',"libtotem-cone-plugin.so")
+  , new Plugin("Windows Media Player Plug-in 10 (compatible; Videos)",'The <a href="http://www.gnome.org/">Videos</a> 3.10.1 plugin handles video and audio streams.',"libtotem-gmp-plugin.so")
+  , new Plugin("iTunes Application Detector", 'This plug-in detects the presence of iTunes when opening iTunes Store URLs in a web page with Firefox.',"librhythmbox-itms-detection-plugin.so")
+  , new Plugin("Foxit Reader Plugin for Mozilla", "Foxit Reader Plug-In For Firefox and Netscape", "npFoxitReaderPlugin.dll")
+  , new Plugin("Java Deployment Toolkit 8.0.250.18", "NPRuntime Script Plug-in Library for JavaTM Deploy", "npdeployJava1.dll")
+  , new Plugin("Intel® Identity Protection Technology" ,"Intel web components updater - Installs and updates the Intel web components", "npIntelWebAPIUpdater.dll")
+  , new Plugin("Photo Gallery", "NPWLPG", "NPWLPG.dll")
+  , new Plugin("Adobe Acrobat", "Adobe PDF Plug-In For Firefox and Netscape 11.0.10", "nppdf32.dll")
+  , new Plugin("ESN Launch Mozilla Plugin", "2.3.0", "npesnlaunch.dll")
+  , new Plugin("NVIDIA 3D Vision", "NVIDIA 3D Vision plugin for Mozilla browsers", "npnv3dv.dll")
+  , new Plugin("Unity Player", "Unity Player 4.3.5f1", "npUnity3D32.dll")
+  , new Plugin("Qualys BrowserCheck Plugin", "Qualys BrowserCheck Plugin 1.5.46.1", "npqbc.dll")
+  , new Plugin("Google Talk Plugin Video Renderer", "Version 5.4.2.18903", "o1dbrowserplugin.dll")
+  , new Plugin("Google Earth Plugin", "GEPlugin", "npgeplugin.dll"),
+  , new Plugin("Google Update", "Google Update", "npGoogleUpdate3.dll")
+  , new Plugin("NVIDIA 3D VISION", "NVIDIA 3D Vision Streaming plugin for Mozilla browsers", "npnv3dvstreaming.dll")
+  , new Plugin("DivX Browser Plug-In", 'a href=http:kdekorte.googlepages.comgecko-mediaplayerGecko Media Playera 1.0.4brbrVideo Player Plug-in for QuickTime RealPlayer and Windows Media Player streams using a href=http:mplayerhq.huMPlayera', "gecko-mediaplayer-dvx.so")
+  , new Plugin("Adobe Acrobat", "Adobe Acrobat Plug-In Version 7.00 for Netscape", "nppdf32.dll")
+  , new Plugin("SumatraPDF Browser Plugin", "SumatraPDF Browser Plugin", "npPdfViewer.dll")
+  , new Plugin("Java Deployment Toolkit 7.0.710.14", "NPRuntime Script Plug-in Library for JavaTM Deploy", "npdeployJava1.dll")
 ];
 
 //end of plugins definition
 
 //Navigator definition
 var appName = 'Netscape';
-
-/* Example of user agent and app version on chrome 
-  user agent : "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/43.0.2357.81 Safari/537.36"
-  /5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/43.0.2357.81 Safari/537.36
-  appVersion : "5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/43.0.2357.81 Safari/537.36"
-
-  Example of user agent and app version on firefox
-  user agent : "Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:38.0) Gecko/20100101 Firefox/38.0"
-  appVersion : "5.0 (X11)"
-*/
-
 var reAppVersionChrome = /[0-9.]+[\w\W]+\/[\w\W]+/;
 var reAppVersionFirefox = /[0-9.]+ \([A-Z0-9]*/;
 if(browser ==="chrome"){
@@ -88,29 +107,26 @@ if(browser ==="chrome"){
 var appCodeName = "Mozilla";
 var product = "Gecko";
 
-
 //Platform
 //The platform has to be the same as the one we can find in the userAgent
 var rePlatformChrome = /; (Linux|Windows) [\w\W]+[\d]+\) /;
 var rePlatformFirefox = /; (Linux|Windows) [\w\W]+[\d]+; /;
-listPlatformsWindows = ["Win32", "Win64"];
-if(browser ==="chrome"){
+var listPlatformsWindows = ["Win32", "Win64"];
+if(browser === "chrome"){
   if(os === "Windows"){
     var platform = listPlatformsWindows[seed%listPlatformsWindows.length];
-  }else{
+  } else{
     var platform = userAgent.match(rePlatformChrome)[0];
     platform = platform.substring(2, platform.length-2);
   }
-}else{
-  if(os == "Windows"){
+} else{
+  if(os === "Windows"){
     var platform = listPlatformsWindows[seed%listPlatformsWindows.length];
-  }else{
+  } else{
     var platform = userAgent.match(rePlatformFirefox)[0];
     platform = platform.substring(2, platform.length-2);
   }
 }
-
-console.log("first platform : "+platform);
 //End platform
 
 //oscpu
@@ -122,21 +138,13 @@ if(browser === "firefox"){
 
 //vendor and vendorSub
 if(browser === "chrome"){
-  vendor = "Google Inc.";
-}else{
-  vendor ="";
+  var vendor = "Google Inc.";
+} else{
+  var vendor ="";
 }
 
-vendorSub ="";
+var vendorSub ="";
 //end vendor and vendorSub
-
-//Cookies and java
-eEnabled = true;
-javaEnabled = false;
-//End cookies and java
-
-
-
 //End of navigator definition
 
 
@@ -147,29 +155,31 @@ var myController = {
     //console.log("Nb access : "+this.nbAccess);
   },
   fakePlugins : function(){
-
     if(browser === "chrome"){
       var listPlugins = listPluginsChrome;
-    }else{
+    } else{
       var listPlugins = listPluginsFirefox;
     }
 
-    var nbNewPlugins = seed % 5; //Max 5 new plugins
-    nbPluginsOriginal = navigator.plugins.length;
-    newPlugins = new Array();
+    var nbNewPlugins = seed % 8; //Max 5 new plugins
+    var nbPluginsOriginal = navigator.plugins.length;
+    var newPlugins = new Array();
     
     var index = nbNewPlugins;
-    for(i= 0; i < nbNewPlugins; i++){
+    for(var i= 0; i < nbNewPlugins; i++){
         newPlugins[i] = listPlugins[index];
+        if(os === "Windows" && newPlugins[i].filename.indexOf(".so") >= 0){
+            newPlugins[i].filename.replace(".so", ".dll");
+        } else if(os === "Linux" && newPlugins[i].filename.indexOf(".dll") >= 0){
+            newPlugins[i].filename.replace(".dll", ".so");
+        }
         listPlugins[index] = -1
         index = (index + nbPluginsOriginal) % listPlugins.length;
-        while(listPlugins == -1){
+        while(listPlugins === -1){
           index++;
         }
     }
- 
     return newPlugins;
-
   }
 };
 
@@ -244,7 +254,8 @@ Object.defineProperty(navigator, 'vendorSub', {
   get: function(){myController.navigatorAccessed();return vendorSub;}
 });
 
-Date.prototype.getTimezoneOffset = function() {return 0;};
+Date.prototype.getTimezoneOffset = function() {return timezoneOffset;};
+console.log("test timezone : "+new Date().getTimezoneOffset());
 
 if(browser === "firefox"){
   Object.defineProperty(navigator, 'buildID', {
@@ -259,15 +270,6 @@ if(browser ==="firefox"){
   Object.defineProperty(navigator, 'oscpu', {
     get: function(){myController.navigatorAccessed();return oscpu;}
   });
-}
-
-//cookies enabled
-Object.defineProperty(navigator, 'cookieEnabled', {
-  get: function(){myController.navigatorAccessed();return cookieEnabled;}
-});
-
-navigator.javaEnabled = function(){
-  return javaEnabled;
 }
 
 /*
@@ -287,6 +289,7 @@ Object.defineProperty(navigator, 'plugins', {
 
 //We lie to give the impression that we are on chrome
 //We delete navigator properties which are only on firefox
+/*
 if(browser === "chrome"){
   delete Object.getPrototypeOf(navigator).buildID;
   delete Object.getPrototypeOf(navigator).battery;
@@ -318,7 +321,7 @@ navigator.__proto__["getBattery"] =function(){
     return new Object();
 }
 navigator.getBattery = function(){
-    return new Object();
+    return 3;
 }
 
 navigator.__proto__["getStorageUpdates"] ="getStorageUpdates";
@@ -368,7 +371,7 @@ Object.defineProperty(navigator, 'webkitTemporaryStorage', {
 
 
 //navigator.getStorageUpdates()
-/*
+
 navigator.getStorageUpdates = function(){
    return new Object();
 }
