@@ -4,7 +4,7 @@ __author__ = 'avastel'
 import subprocess
 import random
 import fileinput
-import tkinter as tk
+import Tkinter as tk
 import math
 import os
 import getpass
