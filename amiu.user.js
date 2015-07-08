@@ -18,7 +18,7 @@
   detect sites which fingerprint to find if they use cookies, localStorage etc 
 */
 
-var seed = 44; var browser = 'chrome'; var mult = -1; var os = 'Windows';var newWidth = 2160; var newHeight = 1344; var availWidth = 2106; var availHeight = 1310; var newColorDepth = 4; var pixelDepth = 4; var timezoneOffset = -60; var productSub = '20030107'; var buildID = '';  
+var seed = 11; var browser = 'chrome'; var mult = -1; var os = 'Windows';var newWidth = 2160; var newHeight = 1344; var availWidth = 2106; var availHeight = 1310; var newColorDepth = 4; var pixelDepth = 4; var timezoneOffset = -60; var productSub = '20030107'; var buildID = '';
 
 //All the following variables will be defined using python
 var userAgent = navigator.userAgent;

@@ -4,15 +4,33 @@ __author__ = 'avastel'
 import subprocess
 import random
 import fileinput
-import Tkinter as tk
+import tkinter as tk
 import math
 import os
 import getpass
 import sys
+import platform
 
 class Firefox():
 
     def __init__(self):
+        if platform.system() == "Windows":
+            self.platformSystem = "Windows"
+            self.prefsJsPath = r"C:\Users\antoine\AppData\Roaming\Mozilla\Firefox\Profiles\euuyo54b.default\prefs.js"
+            self.userJsPath = r"C:\Users\antoine\AppData\Roaming\Mozilla\Firefox\Profiles\euuyo54b.default\user.js"
+            self.gmScript = r"C:\Users\antoine\AppData\Roaming\Mozilla\Firefox\Profiles\euuyo54b.default\gm_scripts\amiu\amiu.user.js"
+            self.firefox = os.path.join('C:\\', 'Program Files (x86)', 'Mozilla Firefox', 'firefox.exe')
+            self.cookies = r"C:\Users\antoine\AppData\Roaming\Mozilla\Firefox\Profiles\euuyo54b.default\cookies.sqlite"
+            self.delCache = r"del /Q C:\Users\antoine\AppData\Local\Mozilla\Firefox\Profiles\euuyo54b.default\cache2\entries\*"
+        else:
+            self.platformSystem ="Linux"
+            self.prefsJsPath = "/home/avastel/.mozilla/firefox/kwdl11go.default/prefs.js"
+            self.userJsPath = "/home/avastel/.mozilla/firefox/kwdl11go.default/user.js"
+            self.gmScript = "/home/avastel/.mozilla/firefox/kwdl11go.default/gm_scripts/amiu/amiu.user.js"
+            self.firefox = "firefox"
+            self.cookies = "/home/avastel/.mozilla/firefox/kwdl11go.default/cookies.sqlite"
+            self.delCache = "rm /home/avastel/.cache/mozilla/firefox/kwdl11go.default/cache2/entries/*"
+
         self.setUserAgent()
         self.setLanguages()
         self.setAcceptEncoding()
@@ -180,7 +198,7 @@ class Firefox():
         if "Firefox" in selectedUA:
             self.browser = "firefox"
         else:
-            self.browser ="chrome"
+            self.browser = "chrome"
 
         print(self.os)
         print(self.browser)
@@ -198,7 +216,7 @@ class Firefox():
         self.width = root.winfo_screenwidth()
         self.height = root.winfo_screenheight()
 
-        if self.os =="firefox":
+        if self.os == "firefox":
             self.mult = 1
         else:
             self.mult = -1
@@ -222,7 +240,7 @@ class Firefox():
     def setProductSub(self):
         seed = random.randint(0,50)
 
-        if self.browser =="chrome":
+        if self.browser == "chrome":
             self.productSub = "20030107"
         else:
             if seed % 3 == 0:
@@ -264,7 +282,6 @@ class Firefox():
             hourBuildId = str((((2+seed) % 24) +1))
             if ((2+seed) % 24) +1 < 10:
                 hourBuildId = "0"+hourBuildId
-
 
             self.buildID = yearBuildId+monthBuildId+dayBuildId+hourBuildId
 
