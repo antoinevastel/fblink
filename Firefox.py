@@ -6,7 +6,9 @@ import random
 import fileinput
 import Tkinter as tk
 import math
-import time
+import os
+import getpass
+import sys
 
 class Firefox():
 
@@ -22,8 +24,6 @@ class Firefox():
 
         self.setPreferences()
         self.setVarJs()
-        print(time.strftime('%X %x %Z'))
-
 
     def setLanguages(self):
         listLanguages = ["en-US", "en","fr","fr-FR","en-GB","en-au","en-CA"]
@@ -50,20 +50,29 @@ class Firefox():
     def setAcceptEncoding(self):
         self.acceptEncoding = 'user_pref("network.http.accept-encoding", "gzip, deflate");\n'
 
-
     def setPreferences(self):
-        #set kwdl11 ... part with a variable
-        # with open("/home/avastel/.mozilla/firefox/kwdl11go.default/user.js", "w") as prefs:
-        #     prefs.write("\n"+self.userAgent)
-        #     prefs.close()
+        if os.name == "posix":
+            nameUser = getpass.getuser()
 
-        with open("/home/avastel/.mozilla/firefox/kwdl11go.default/prefs.js", "a") as prefs:
+            filesMoz = os.listdir("/home/"+nameUser+"/.mozilla/firefox")
+            profileName = ""
+            for f in filesMoz:
+                if ".default" in f:
+                    profileName =f
+
+            if profileName == "":
+                sys.exit(0)
+            prefsPath = "/home/"+nameUser+"/.mozilla/firefox/"+profileName+"/prefs.js"
+
+        elif os.name == "windows":
+            prefsPath = "Path on Windows"
+
+        with open(prefsPath, "a") as prefs:
             prefs.write(self.languages)
             prefs.write(self.userAgent)
             prefs.write(self.acceptHttp)
             prefs.write(self.acceptEncoding)
             prefs.close()
-
 
     def run(self):
         firefoxProcess = subprocess.Popen(["firefox", "-private", "http://bluecava.com/opt-out/"])
@@ -204,14 +213,11 @@ class Firefox():
         self.height = listHeight[indexNewHeight]
         self.availWidth = int(math.floor(0.975 * self.width))
         self.availHeight = int(math.floor(0.975 * self.height))
-
         self.colorDepth = listColorDepth[self.width % len(listColorDepth)]
-
 
     def setTimezoneOffset(self):
         listTimezoneOffset = [-60, 300, -120, 0, 480, -540, 360, 420, 240, -480, -660, -180, 180, 120, -330, -600, -780, -240, -420]
         self.timezoneOffset = listTimezoneOffset[random.randint(0.,200) % len(listTimezoneOffset)]
-
 
     def setProductSub(self):
         seed = random.randint(0,50)
@@ -232,7 +238,6 @@ class Firefox():
             dayProductSub = str(((seed % 29) +1))
             if (seed % 29) +1 < 10:
                 dayProductSub = "0"+dayProductSub
-
 
             self.productSub = yearProductSub+monthProductSub+dayProductSub
 
@@ -264,15 +269,31 @@ class Firefox():
             self.buildID = yearBuildId+monthBuildId+dayBuildId+hourBuildId
 
     def setVarJs(self):
+        if os.name == "posix":
+            nameUser = getpass.getuser()
+
+            filesMoz = os.listdir("/home/"+nameUser+"/.mozilla/firefox")
+            profileName = ""
+            for f in filesMoz:
+                if ".default" in f:
+                    profileName =f
+
+            if profileName == "":
+                sys.exit(0)
+            prefsPath = "/home/"+nameUser+"/.mozilla/firefox/"+profileName+"/gm_scripts/amiu/amiu.user.js"
+
+        elif os.name == "windows":
+            prefsPath = "Path on Windows"
+
         self.seed = random.randint(0, 200)
         vars =""
         #we define the variable seed in javascript file
-        for line in fileinput.input("/home/avastel/.mozilla/firefox/kwdl11go.default/gm_scripts/amiu/amiu.user.js", inplace=True):
+        for line in fileinput.input(prefsPath, inplace=True):
             if "var seed = " in line:
                 vars += "var seed = "+str(self.seed)+"; var browser = '"+self.browser+"'; var mult = "+str(self.mult)+"; var os = '"+self.os+"';"
                 vars += "var newWidth = "+str(self.width)+"; var newHeight = "+str(self.height)+"; var availWidth = "+str(self.availWidth)+"; "
                 vars += "var availHeight = "+str(self.availHeight)+"; var newColorDepth = "+str(self.colorDepth)+"; var pixelDepth = "+str(self.colorDepth)+"; "
-                vars += "var timezoneOffset = "+str(self.timezoneOffset)+"; var productSub = '"+self.productSub+"'; var buildID = '"+self.buildID+"'; //"+time.strftime('%X %x %Z')
+                vars += "var timezoneOffset = "+str(self.timezoneOffset)+"; var productSub = '"+self.productSub+"'; var buildID = '"+self.buildID+"';"
                 print(vars)
             else:
                 newLine = line.replace("\n","")
