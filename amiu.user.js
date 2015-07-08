@@ -18,18 +18,14 @@
   detect sites which fingerprint to find if they use cookies, localStorage etc 
 */
 
-var seed = 37; var browser = 'firefox'; var mult = -1; var os = 'Windows';var newWidth = 2160; var newHeight = 1344; var availWidth = 2106; var availHeight = 1310; var newColorDepth = 4; var pixelDepth = 4; var timezoneOffset = -540; var productSub = '20131123'; var buildID = '2014022102';  
+var seed = 44; var browser = 'chrome'; var mult = -1; var os = 'Windows';var newWidth = 2160; var newHeight = 1344; var availWidth = 2106; var availHeight = 1310; var newColorDepth = 4; var pixelDepth = 4; var timezoneOffset = -60; var productSub = '20030107'; var buildID = '';  
 
 //All the following variables will be defined using python
 var userAgent = navigator.userAgent;
 var language = navigator.language;
 var languages = navigator.languages;
 
-
-console.log("browser is "+browser+", mult is : "+mult+", os is : "+os);
-
-
-
+console.log("browser is "+browser+", os is : "+os);
 
 //Plugins definition
 function Plugin(name, description, filename){
@@ -38,10 +34,10 @@ function Plugin(name, description, filename){
   this.filename = filename;
 }
 
-var listPluginsChrome = [new Plugin("Chrome Remote Desktop Viewer",'This plugin allows you to securely access other computers that have been shared with you. To use this plugin you must first install the <a href="https://chrome.google.com/remotedesktop">Chrome Remote Desktop</a> webapp.', 'internal-remoting-viewer')
-  , new Plugin("Chrome PDF Viewer",'', 'mhjfbmdgcfjbbpaeojofohoefgiehjai')
-  , new Plugin("Widevine Content Decryption Module",'Enables Widevine licenses for playback of HTML audio/video content. (version: 1.4.8.823)','libwidevinecdmadapter.so')
-  , new Plugin("Chrome PDF Viewer",'Portable Document Format','internal-pdf-viewer')
+var listPluginsChrome = [new Plugin("Chrome Remote Desktop Viewer", 'This plugin allows you to securely access other computers that have been shared with you. To use this plugin you must first install the <a href="https://chrome.google.com/remotedesktop">Chrome Remote Desktop</a> webapp.', 'internal-remoting-viewer')
+  , new Plugin("Chrome PDF Viewer", '', 'mhjfbmdgcfjbbpaeojofohoefgiehjai')
+  , new Plugin("Widevine Content Decryption Module", 'Enables Widevine licenses for playback of HTML audio/video content. (version: 1.4.8.823)', 'libwidevinecdmadapter.so')
+  , new Plugin("Chrome PDF Viewer", 'Portable Document Format','internal-pdf-viewer')
   , new Plugin("Google Update", "Google Update", "npGoogleUpdate3.dll")
   , new Plugin("Intel® Identity Protection Technology", "Intel web components for Intel® Identity Protection Technology", "npIntelWebAPIIPT.dll")
   , new Plugin("Java Deployment Toolkit 8.0.310.13", "NPRuntime Script Plug-in Library for JavaTM Deploy", "npDeployJava1.dll")
@@ -70,12 +66,12 @@ var listPluginsChrome = [new Plugin("Chrome Remote Desktop Viewer",'This plugin 
 
 var listPluginsFirefox = [new Plugin("DivX® Web Player", "DivX Web Player version 1.4.0.233", "libtotem-mully-plugin.so")
   , new Plugin("QuickTime Plug-in 7.6.6", 'The <a href="http://www.gnome.org/">Videos</a> 3.10.1 plugin handles video and audio streams.', "libtotem-narrowspace-plugin.so")
-  , new Plugin("VLC Multimedia Plugin (compatible Videos 3.10.1)", 'The <a href="http://www.gnome.org/">Videos</a> 3.10.1 plugin handles video and audio streams.',"libtotem-cone-plugin.so")
-  , new Plugin("Windows Media Player Plug-in 10 (compatible; Videos)",'The <a href="http://www.gnome.org/">Videos</a> 3.10.1 plugin handles video and audio streams.',"libtotem-gmp-plugin.so")
-  , new Plugin("iTunes Application Detector", 'This plug-in detects the presence of iTunes when opening iTunes Store URLs in a web page with Firefox.',"librhythmbox-itms-detection-plugin.so")
+  , new Plugin("VLC Multimedia Plugin (compatible Videos 3.10.1)", 'The <a href="http://www.gnome.org/">Videos</a> 3.10.1 plugin handles video and audio streams.', "libtotem-cone-plugin.so")
+  , new Plugin("Windows Media Player Plug-in 10 (compatible; Videos)", 'The <a href="http://www.gnome.org/">Videos</a> 3.10.1 plugin handles video and audio streams.', "libtotem-gmp-plugin.so")
+  , new Plugin("iTunes Application Detector", 'This plug-in detects the presence of iTunes when opening iTunes Store URLs in a web page with Firefox.', "librhythmbox-itms-detection-plugin.so")
   , new Plugin("Foxit Reader Plugin for Mozilla", "Foxit Reader Plug-In For Firefox and Netscape", "npFoxitReaderPlugin.dll")
   , new Plugin("Java Deployment Toolkit 8.0.250.18", "NPRuntime Script Plug-in Library for JavaTM Deploy", "npdeployJava1.dll")
-  , new Plugin("Intel® Identity Protection Technology" ,"Intel web components updater - Installs and updates the Intel web components", "npIntelWebAPIUpdater.dll")
+  , new Plugin("Intel® Identity Protection Technology", "Intel web components updater - Installs and updates the Intel web components", "npIntelWebAPIUpdater.dll")
   , new Plugin("Photo Gallery", "NPWLPG", "NPWLPG.dll")
   , new Plugin("Adobe Acrobat", "Adobe PDF Plug-In For Firefox and Netscape 11.0.10", "nppdf32.dll")
   , new Plugin("ESN Launch Mozilla Plugin", "2.3.0", "npesnlaunch.dll")
@@ -98,7 +94,7 @@ var listPluginsFirefox = [new Plugin("DivX® Web Player", "DivX Web Player versi
 var appName = 'Netscape';
 var reAppVersionChrome = /[0-9.]+[\w\W]+\/[\w\W]+/;
 var reAppVersionFirefox = /[0-9.]+ \([A-Z0-9]*/;
-if(browser ==="chrome"){
+if(browser === "chrome"){
   var appVersion = userAgent.match(reAppVersionChrome)[0];
 }else{
   var appVersion = userAgent.match(reAppVersionFirefox)[0]+")";
@@ -140,10 +136,10 @@ if(browser === "firefox"){
 if(browser === "chrome"){
   var vendor = "Google Inc.";
 } else{
-  var vendor ="";
+  var vendor = "";
 }
 
-var vendorSub ="";
+var vendorSub = "";
 //end vendor and vendorSub
 //End of navigator definition
 
@@ -152,21 +148,20 @@ var myController = {
   nbAccess : 0,
   navigatorAccessed : function(){
     this.nbAccess ++;
-    //console.log("Nb access : "+this.nbAccess);
   },
   fakePlugins : function(){
+    var listPlugins;
     if(browser === "chrome"){
-      var listPlugins = listPluginsChrome;
+      listPlugins = listPluginsChrome;
     } else{
-      var listPlugins = listPluginsFirefox;
+      listPlugins = listPluginsFirefox;
     }
 
-    var nbNewPlugins = seed % 8; //Max 5 new plugins
+    var nbNewPlugins = seed % 5 + 3; //Max 8 
     var nbPluginsOriginal = navigator.plugins.length;
-    var newPlugins = new Array();
-    
+    var newPlugins = new Array(); 
     var index = nbNewPlugins;
-    for(var i= 0; i < nbNewPlugins; i++){
+    for(var i = 0; i < nbNewPlugins; i++){
         newPlugins[i] = listPlugins[index];
         if(os === "Windows" && newPlugins[i].filename.indexOf(".so") >= 0){
             newPlugins[i].filename.replace(".so", ".dll");
@@ -175,7 +170,7 @@ var myController = {
         }
         listPlugins[index] = -1
         index = (index + nbPluginsOriginal) % listPlugins.length;
-        while(listPlugins === -1){
+        while(listPlugins[index] === -1){
           index++;
         }
     }
@@ -183,92 +178,142 @@ var myController = {
   }
 };
 
-
 /* Screen object */
-console.log("current width : "+screen.width);
 Object.defineProperty(screen, 'width', {
-    get: function(){myController.navigatorAccessed();return newWidth;}
+    get: function(){
+      myController.navigatorAccessed();
+      return newWidth;
+    }
 });
 
 Object.defineProperty(screen, 'height', {
-    get: function(){myController.navigatorAccessed();return newHeight;}
+    get: function(){
+      myController.navigatorAccessed();
+      return newHeight;
+    }
 });
 
 Object.defineProperty(screen, 'colorDepth', {
-  get: function(){myController.navigatorAccessed();return newColorDepth;}
+  get: function(){
+    myController.navigatorAccessed();
+    return newColorDepth;
+  }
 });
 
 Object.defineProperty(screen, 'availWidth', {
-  get: function(){myController.navigatorAccessed();return availWidth;}
+  get: function(){
+    myController.navigatorAccessed();
+    return availWidth;
+  }
 });
 
 Object.defineProperty(screen, 'availHeight', {
-  get: function(){myController.navigatorAccessed();return availHeight;}
+  get: function(){
+    myController.navigatorAccessed();
+    return availHeight;
+  }
 });
 
 Object.defineProperty(screen, 'pixelDepth', {
-  get: function(){myController.navigatorAccessed();return pixelDepth;}
+  get: function(){
+    myController.navigatorAccessed();
+    return pixelDepth;
+  }
 });
 
 /* Navigator object */
-
 //App info
 Object.defineProperty(navigator, 'appName', {
-  get: function(){myController.navigatorAccessed();return appName;}
+  get: function(){
+    myController.navigatorAccessed();
+    return appName;
+  }
 });
 
 Object.defineProperty(navigator, 'appVersion', {
-  get: function(){myController.navigatorAccessed();return appVersion;}
+  get: function(){
+    myController.navigatorAccessed();
+    return appVersion;
+  }
 });
 
 Object.defineProperty(navigator, 'appCodeName', {
-  get: function(){myController.navigatorAccessed();return appCodeName;}
+  get: function(){
+    myController.navigatorAccessed();
+    return appCodeName;
+  }
 });
 
 //Language and languages should be set using the value generated in python
 Object.defineProperty(navigator, 'language', {
-  get: function(){myController.navigatorAccessed();return language;}
+  get: function(){
+    myController.navigatorAccessed();
+    return language;
+  }
 });
 
 Object.defineProperty(navigator, 'languages', {
-  get: function(){myController.navigatorAccessed();return languages;}
+  get: function(){
+    myController.navigatorAccessed();
+    return languages;
+  }
 });
 
 Object.defineProperty(navigator, 'platform', {
-  get: function(){myController.navigatorAccessed();return platform;}
+  get: function(){
+    myController.navigatorAccessed();
+    return platform;
+  }
 });
 
 Object.defineProperty(navigator, 'product', {
-  get: function(){myController.navigatorAccessed();return product;}
+  get: function(){
+    myController.navigatorAccessed();
+    return product;
+  }
 });
 
 Object.defineProperty(navigator, 'productSub', {
-  get: function(){myController.navigatorAccessed();return productSub;}
+  get: function(){
+    myController.navigatorAccessed();
+    return productSub;
+  }
 });
 
 Object.defineProperty(navigator, 'vendor', {
-  get: function(){myController.navigatorAccessed();return vendor;}
+  get: function(){
+    myController.navigatorAccessed();
+    return vendor;
+  }
 });
 
 Object.defineProperty(navigator, 'vendorSub', {
-  get: function(){myController.navigatorAccessed();return vendorSub;}
+  get: function(){
+    myController.navigatorAccessed();
+    return vendorSub;
+  }
 });
 
-Date.prototype.getTimezoneOffset = function() {return timezoneOffset;};
-console.log("test timezone : "+new Date().getTimezoneOffset());
+Date.prototype.getTimezoneOffset = function() {
+  return timezoneOffset;
+};
 
 if(browser === "firefox"){
   Object.defineProperty(navigator, 'buildID', {
-    get: function(){myController.navigatorAccessed();return buildID;}
+    get: function(){
+      myController.navigatorAccessed();
+      return buildID;
+    }
   });
 }
 
-
-
 //Oscpu : avalaible only on firefox
-if(browser ==="firefox"){
+if(browser === "firefox"){
   Object.defineProperty(navigator, 'oscpu', {
-    get: function(){myController.navigatorAccessed();return oscpu;}
+    get: function(){
+      myController.navigatorAccessed();
+      return oscpu;
+    }
   });
 }
 
@@ -285,97 +330,4 @@ Object.defineProperty(navigator, 'plugins', {
   writable: false,
   value: myController.fakePlugins()
 });
-
-
-//We lie to give the impression that we are on chrome
-//We delete navigator properties which are only on firefox
-/*
-if(browser === "chrome"){
-  delete Object.getPrototypeOf(navigator).buildID;
-  delete Object.getPrototypeOf(navigator).battery;
-  delete Object.getPrototypeOf(navigator).mediaDevices;
-  delete Object.getPrototypeOf(navigator).mozGetUserMedia;
-  delete Object.getPrototypeOf(navigator).oscpu;
-  delete Object.getPrototypeOf(navigator).registerContentHandler;
-  delete Object.getPrototypeOf(navigator).taintEnabled;
-
-  Object.defineProperty(navigator, 'mozPay', {
-    get: function(){myController.navigatorAccessed();return "undefined";}
-  });
-
-  Object.defineProperty(navigator, 'mozContacts', {
-    get: function(){myController.navigatorAccessed();return "undefined";}
-  });
-
-  Object.defineProperty(navigator, 'mozApps', {
-    get: function(){myController.navigatorAccessed();return "undefined";}
-  });
-
-  Object.defineProperty(navigator, 'mozTCPSocket', {
-    get: function(){myController.navigatorAccessed();return "undefined";}
-  });
-}
-//we add navigator properties which are on chrome but not on firefox
-//navigator.prototype.getBattery = new Object();
-navigator.__proto__["getBattery"] =function(){
-    return new Object();
-}
-navigator.getBattery = function(){
-    return 3;
-}
-
-navigator.__proto__["getStorageUpdates"] ="getStorageUpdates";
-navigator.getStorageUpdates = function(){
-    return new Object();
-}
-
-navigator.__proto__["maxTouchPoints"] ="maxTouchPoints";
-Object.defineProperty(navigator, 'maxTouchPoints', {
-  get: function(){myController.navigatorAccessed();return 0;}
-});
-
-navigator.__proto__["permissions"] ="permissions";
-Object.defineProperty(navigator, 'permissions', {
-  get: function(){myController.navigatorAccessed();return new Object();}
-});
-
-navigator.__proto__["requestMIDIAccess"] ="requestMIDIAccess";
-navigator.requestMIDIAccess = function(){
-    return new Object();
-}
-
-navigator.__proto__["serviceWorker"] ="serviceWorker";
-Object.defineProperty(navigator, 'serviceWorker', {
-  get: function(){myController.navigatorAccessed();return new Object();}
-});
-
-navigator.__proto__["unregisterProtocolHandler"] ="unregisterProtocolHandler";
-navigator.unregisterProtocolHandler = function(a, b){
-    return new Object();
-}
-
-navigator.__proto__["webkitGetUserMedia"] ="webkitGetUserMedia";
-navigator.unregisterProtocolHandler = function(a, b, c){
-    return new Object();
-}
-
-navigator.__proto__["webkitPersistentStorage"] ="webkitPersistentStorage";
-Object.defineProperty(navigator, 'webkitPersistentStorage', {
-  get: function(){myController.navigatorAccessed();return new Object();}
-});
-
-navigator.__proto__["webkitTemporaryStorage"] ="webkitTemporaryStorage";
-Object.defineProperty(navigator, 'webkitTemporaryStorage', {
-  get: function(){myController.navigatorAccessed();return new Object();}
-});
-
-
-//navigator.getStorageUpdates()
-
-navigator.getStorageUpdates = function(){
-   return new Object();
-}
-*/
-//randomizer auto complete des formulaires
-  
  

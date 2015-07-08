@@ -6,6 +6,7 @@ import random
 import fileinput
 import Tkinter as tk
 import math
+import time
 
 class Firefox():
 
@@ -19,10 +20,9 @@ class Firefox():
         self.setProductSub()
         self.setBuildId()
 
-        self.setGreaseMonkey()
-
         self.setPreferences()
         self.setVarJs()
+        print(time.strftime('%X %x %Z'))
 
 
     def setLanguages(self):
@@ -51,24 +51,17 @@ class Firefox():
         self.acceptEncoding = 'user_pref("network.http.accept-encoding", "gzip, deflate");\n'
 
 
-
-    def setGreaseMonkey(self):
-        #only for development phase
-        self.greaseMonkey = 'user_pref("extensions.greasemonkey.fileIsGreaseable","true");\n'
-
-
     def setPreferences(self):
         #set kwdl11 ... part with a variable
-        with open("/home/avastel/.mozilla/firefox/kwdl11go.default/user.js", "w") as prefs:
-            prefs.write("\n"+self.userAgent)
-
-            prefs.close()
+        # with open("/home/avastel/.mozilla/firefox/kwdl11go.default/user.js", "w") as prefs:
+        #     prefs.write("\n"+self.userAgent)
+        #     prefs.close()
 
         with open("/home/avastel/.mozilla/firefox/kwdl11go.default/prefs.js", "a") as prefs:
-            prefs.write("\n"+self.languages)
+            prefs.write(self.languages)
+            prefs.write(self.userAgent)
             prefs.write(self.acceptHttp)
             prefs.write(self.acceptEncoding)
-            prefs.write(self.greaseMonkey)
             prefs.close()
 
 
@@ -279,9 +272,8 @@ class Firefox():
                 vars += "var seed = "+str(self.seed)+"; var browser = '"+self.browser+"'; var mult = "+str(self.mult)+"; var os = '"+self.os+"';"
                 vars += "var newWidth = "+str(self.width)+"; var newHeight = "+str(self.height)+"; var availWidth = "+str(self.availWidth)+"; "
                 vars += "var availHeight = "+str(self.availHeight)+"; var newColorDepth = "+str(self.colorDepth)+"; var pixelDepth = "+str(self.colorDepth)+"; "
-                vars += "var timezoneOffset = "+str(self.timezoneOffset)+"; var productSub = '"+self.productSub+"'; var buildID = '"+self.buildID+"';  "
+                vars += "var timezoneOffset = "+str(self.timezoneOffset)+"; var productSub = '"+self.productSub+"'; var buildID = '"+self.buildID+"'; //"+time.strftime('%X %x %Z')
                 print(vars)
             else:
                 newLine = line.replace("\n","")
                 print(newLine)
-
