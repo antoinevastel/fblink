@@ -4,7 +4,7 @@ __author__ = 'avastel'
 import subprocess
 import random
 import fileinput
-import Tkinter as tk
+import tkinter as tk
 import math
 import os
 import getpass
@@ -14,22 +14,39 @@ import platform
 class Firefox():
 
     def __init__(self):
+        self.nameUser = getpass.getuser()
+        print(self.nameUser)
+        self.profileName = ""
         if platform.system() == "Windows":
+            self.mozFolder = 'C://Users/'+self.nameUser+'/AppData/Roaming/Mozilla/Firefox/Profiles'
+            self.filesMoz = os.listdir(self.mozFolder)
+            for f in self.filesMoz:
+                if ".default" in f:
+                    self.profileName = f
+                    break
+
+            if self.profileName == "":
+                sys.exit(0)
+
+            self.prefsPath = os.path.join(self.mozFolder, self.profileName, "prefs.js")
             self.platformSystem = "Windows"
-            self.prefsJsPath = r"C:\Users\antoine\AppData\Roaming\Mozilla\Firefox\Profiles\euuyo54b.default\prefs.js"
-            self.userJsPath = r"C:\Users\antoine\AppData\Roaming\Mozilla\Firefox\Profiles\euuyo54b.default\user.js"
-            self.gmScript = r"C:\Users\antoine\AppData\Roaming\Mozilla\Firefox\Profiles\euuyo54b.default\gm_scripts\amiu\amiu.user.js"
+            self.gmScript = os.path.join(self.mozFolder, self.profileName, "gm_scripts", "amiu", "amiu.user.js")
             self.firefox = os.path.join('C:\\', 'Program Files (x86)', 'Mozilla Firefox', 'firefox.exe')
-            self.cookies = r"C:\Users\antoine\AppData\Roaming\Mozilla\Firefox\Profiles\euuyo54b.default\cookies.sqlite"
-            self.delCache = r"del /Q C:\Users\antoine\AppData\Local\Mozilla\Firefox\Profiles\euuyo54b.default\cache2\entries\*"
         else:
+            self.mozFolder = "/home/"+self.nameUser+"/.mozilla/firefox"
+            self.filesMoz = os.listdir("/home/"+self.nameUser+"/.mozilla/firefox")
+            for f in self.filesMoz:
+                if ".default" in f:
+                    self.profileName = f
+                    break
+
+            if self.profileName == "":
+                sys.exit(0)
+
+            self.prefsPath = "/home/"+self.nameUser+"/.mozilla/firefox/"+self.profileName+"/prefs.js"
             self.platformSystem ="Linux"
-            self.prefsJsPath = "/home/avastel/.mozilla/firefox/kwdl11go.default/prefs.js"
-            self.userJsPath = "/home/avastel/.mozilla/firefox/kwdl11go.default/user.js"
-            self.gmScript = "/home/avastel/.mozilla/firefox/kwdl11go.default/gm_scripts/amiu/amiu.user.js"
+            self.gmScript = self.mozFolder+"/"+self.profileName+"/gm_scripts/amiu/amiu.user.js"
             self.firefox = "firefox"
-            self.cookies = "/home/avastel/.mozilla/firefox/kwdl11go.default/cookies.sqlite"
-            self.delCache = "rm /home/avastel/.cache/mozilla/firefox/kwdl11go.default/cache2/entries/*"
 
         self.setUserAgent()
         self.setLanguages()
@@ -69,23 +86,7 @@ class Firefox():
         self.acceptEncoding = 'user_pref("network.http.accept-encoding", "gzip, deflate");\n'
 
     def setPreferences(self):
-        if os.name == "posix":
-            nameUser = getpass.getuser()
-
-            filesMoz = os.listdir("/home/"+nameUser+"/.mozilla/firefox")
-            profileName = ""
-            for f in filesMoz:
-                if ".default" in f:
-                    profileName =f
-
-            if profileName == "":
-                sys.exit(0)
-            prefsPath = "/home/"+nameUser+"/.mozilla/firefox/"+profileName+"/prefs.js"
-
-        elif os.name == "windows":
-            prefsPath = "Path on Windows"
-
-        with open(prefsPath, "a") as prefs:
+        with open(self.prefsPath, "a") as prefs:
             prefs.write(self.languages)
             prefs.write(self.userAgent)
             prefs.write(self.acceptHttp)
@@ -93,7 +94,7 @@ class Firefox():
             prefs.close()
 
     def run(self):
-        firefoxProcess = subprocess.Popen(["firefox", "-private", "http://bluecava.com/opt-out/"])
+        firefoxProcess = subprocess.Popen([self.firefox, "-private", "http://bluecava.com/opt-out/"])
         return firefoxProcess
 
     def setUserAgent(self):
@@ -286,26 +287,10 @@ class Firefox():
             self.buildID = yearBuildId+monthBuildId+dayBuildId+hourBuildId
 
     def setVarJs(self):
-        if os.name == "posix":
-            nameUser = getpass.getuser()
-
-            filesMoz = os.listdir("/home/"+nameUser+"/.mozilla/firefox")
-            profileName = ""
-            for f in filesMoz:
-                if ".default" in f:
-                    profileName =f
-
-            if profileName == "":
-                sys.exit(0)
-            prefsPath = "/home/"+nameUser+"/.mozilla/firefox/"+profileName+"/gm_scripts/amiu/amiu.user.js"
-
-        elif os.name == "windows":
-            prefsPath = "Path on Windows"
-
         self.seed = random.randint(0, 200)
         vars =""
         #we define the variable seed in javascript file
-        for line in fileinput.input(prefsPath, inplace=True):
+        for line in fileinput.input(self.gmScript, inplace=True):
             if "var seed = " in line:
                 vars += "var seed = "+str(self.seed)+"; var browser = '"+self.browser+"'; var mult = "+str(self.mult)+"; var os = '"+self.os+"';"
                 vars += "var newWidth = "+str(self.width)+"; var newHeight = "+str(self.height)+"; var availWidth = "+str(self.availWidth)+"; "
