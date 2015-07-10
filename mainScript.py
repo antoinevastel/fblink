@@ -9,7 +9,6 @@ def main():
     firefox = Firefox()
     firefoxProcess = firefox.run()
     firefoxProcess.wait()
-
     print("end of execution")
 
 if __name__ == '__main__':
