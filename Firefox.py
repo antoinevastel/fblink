@@ -60,6 +60,19 @@ class Firefox():
         self.setPreferences()
         self.setVarJs()
 
+    def hasGreasemonkey(self):
+        gmPath = self.filesMoz+"/gm_scripts"
+        if os.path.exists(gmPath):
+            return True
+        else:
+            return False
+
+    def hasScript(self):
+        if os.path.exists(self.gmScript):
+            return True
+        else:
+            return False
+        
     def setLanguages(self):
         listLanguages = ["en-US", "en","fr","fr-FR","en-GB","en-au","en-CA"]
         choosenLanguages = list()
