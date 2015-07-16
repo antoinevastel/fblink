@@ -10,12 +10,13 @@ import os
 import getpass
 import sys
 import platform
+import webbrowser
+from Ui import *
 
 class Firefox():
 
     def __init__(self):
         self.nameUser = getpass.getuser()
-        print(self.nameUser)
         self.profileName = ""
         if platform.system() == "Windows":
             self.mozFolder = 'C://Users/'+self.nameUser+'/AppData/Roaming/Mozilla/Firefox/Profiles'
@@ -28,10 +29,15 @@ class Firefox():
             if self.profileName == "":
                 sys.exit(0)
 
-            self.prefsPath = os.path.join(self.mozFolder, self.profileName, "prefs.js")
-            self.platformSystem = "Windows"
-            self.gmScript = os.path.join(self.mozFolder, self.profileName, "gm_scripts", "amiu", "amiu.user.js")
-            self.firefox = os.path.join('C:\\', 'Program Files (x86)', 'Mozilla Firefox', 'firefox.exe')
+            if self.hasGreasemonkey():
+                print("Greasmonkey installed")
+
+                self.prefsPath = os.path.join(self.mozFolder, self.profileName, "prefs.js")
+                self.platformSystem = "Windows"
+                self.gmScript = os.path.join(self.mozFolder, self.profileName, "gm_scripts", "amiu", "amiu.user.js")
+                self.firefox = os.path.join('C:\\', 'Program Files (x86)', 'Mozilla Firefox', 'firefox.exe')
+            else:
+                print("Greasmonkey is not installed")
         else:
             self.mozFolder = "/home/"+self.nameUser+"/.mozilla/firefox"
             self.filesMoz = os.listdir("/home/"+self.nameUser+"/.mozilla/firefox")
@@ -43,25 +49,30 @@ class Firefox():
             if self.profileName == "":
                 sys.exit(0)
 
-            self.prefsPath = "/home/"+self.nameUser+"/.mozilla/firefox/"+self.profileName+"/prefs.js"
-            self.platformSystem ="Linux"
-            self.gmScript = self.mozFolder+"/"+self.profileName+"/gm_scripts/amiu/amiu.user.js"
-            self.firefox = "firefox"
+            if self.hasGreasemonkey():
+                print("Greasmonkey installed")
+                self.prefsPath = "/home/"+self.nameUser+"/.mozilla/firefox/"+self.profileName+"/prefs.js"
+                self.platformSystem ="Linux"
+                self.gmScript = self.mozFolder+"/"+self.profileName+"/gm_scripts/amiu/amiu.user.js"
+                self.firefox = "firefox"
+            else:
+                print("Greasmonkey is not installed")
 
-        self.setUserAgent()
-        self.setLanguages()
-        self.setAcceptEncoding()
-        self.setAcceptHttp()
-        self.setSizeScren()
-        self.setTimezoneOffset()
-        self.setProductSub()
-        self.setBuildId()
+        if self.hasGreasemonkey():
+            self.setUserAgent()
+            self.setLanguages()
+            self.setAcceptEncoding()
+            self.setAcceptHttp()
+            self.setSizeScren()
+            self.setTimezoneOffset()
+            self.setProductSub()
+            self.setBuildId()
 
-        self.setPreferences()
-        self.setVarJs()
+            self.setPreferences()
+            self.setVarJs()
 
     def hasGreasemonkey(self):
-        gmPath = self.filesMoz+"/gm_scripts"
+        gmPath = self.mozFolder+"/"+self.profileName+"/gm_scripts"
         if os.path.exists(gmPath):
             return True
         else:
@@ -106,9 +117,17 @@ class Firefox():
             prefs.write(self.acceptEncoding)
             prefs.close()
 
+    def openLink(event, x):
+        webbrowser.open_new(r"http://www.google.com")
+
     def run(self):
-        firefoxProcess = subprocess.Popen([self.firefox, "-private", "http://bluecava.com/opt-out/"])
-        return firefoxProcess
+        if self.hasGreasemonkey():
+            firefoxProcess = subprocess.Popen([self.firefox, "-private", "http://bluecava.com/opt-out/"])
+            firefoxProcess.wait()
+        else:
+            window = tk.Tk()
+            interface = Ui(window)
+            interface.mainloop()
 
     def setUserAgent(self):
         self.listUAs = list()
